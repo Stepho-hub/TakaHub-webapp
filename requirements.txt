@@ -13,7 +13,6 @@ pytz==2025.2
 requests==2.32.3
 six==1.17.0
 sqlparse==0.5.3
-sslcommerz-lib==1.0
 tzdata==2025.2
 urllib3==2.4.0
 whitenoise==6.11.0

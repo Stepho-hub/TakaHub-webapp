@@ -162,7 +162,7 @@ class CartItem(models.Model):
     
 class Order(models.Model):
     PAYMENT_CHOICES = [
-        ('sslcommerz', 'SSLCommerz'),
+        ('mpesa', 'MPESA'),
         ('cod', 'Cash on Delivery'),
     ]
     
@@ -193,8 +193,8 @@ class Order(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
-    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')  
-    delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')  
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
+    delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='ready')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     assigned_delivery_guy = models.ForeignKey(
@@ -205,6 +205,7 @@ class Order(models.Model):
         related_name='assigned_orders'
     )
     expected_delivery = models.DateTimeField(null=True, blank=True)
+    checkout_request_id = models.CharField(max_length=100, blank=True, null=True)  # For MPESA
 
     def __str__(self):
         return f"Order #{self.id} by {self.buyer.username}"

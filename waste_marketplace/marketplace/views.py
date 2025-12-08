@@ -12,7 +12,6 @@ from .forms import UpcycledProductForm, TrashItemForm
 from django.contrib.contenttypes.models import ContentType
 from .models import CartItem, Order, OrderItem
 from django.views.decorators.csrf import csrf_exempt
-from sslcommerz_lib import SSLCOMMERZ 
 from django.http import HttpResponse
 from django.contrib.contenttypes.models import ContentType
 from decimal import Decimal
@@ -22,6 +21,10 @@ from django.db.models import Avg
 from users.models import DriverProfile, DriverRating
 from django.db.models import Q
 from itertools import chain
+import requests
+import json
+import base64
+from django.conf import settings
 
 
 def login_view(request):
@@ -456,10 +459,11 @@ def initiate_payment(request):
         zip_code=post_data.get("zip"),
         phone=post_data.get("phone"),
         email=post_data.get("email"),
-        payment_method='sslcommerz',
+        payment_method='mpesa',
         total_amount=Decimal(subtotal),
         payment_status='pending',
         delivery_status='ready',
+        checkout_request_id='',  # Will update after STK Push
     )
 
     # 3) Create its OrderItems
@@ -475,37 +479,106 @@ def initiate_payment(request):
     # 4) Save pending order ID in session
     request.session['pending_order_id'] = order.id
 
-    # 5) Build SSLCommerz payload using order.id as tran_id
-    store_id = 'trash680a853212384'
-    store_passwd = 'trash680a853212384@ssl'
-    gateway = SSLCOMMERZ({
-        'store_id': store_id,
-        'store_pass': store_passwd,
-        'issandbox': True
-    })
+    # 5) Initiate MPESA STK Push
+    phone_number = post_data.get("phone")  # Assuming phone is in format 254XXXXXXXXX
+    if not phone_number.startswith('254'):
+        phone_number = '254' + phone_number[1:] if phone_number.startswith('0') else phone_number
 
-    data = {
-        'total_amount': subtotal,
-        'currency': "BDT",
-        'tran_id': f"TTS_{order.id}",
-        'success_url': request.build_absolute_uri('/payment/success/'),
-        'fail_url':    request.build_absolute_uri('/payment/fail/'),
-        'cancel_url':  request.build_absolute_uri('/payment/cancel/'),
-        'ipn_url':     request.build_absolute_uri('/payment/ipn/'),
-        'cus_name':    f"{order.first_name} {order.last_name}",
-        'cus_email':   order.email,
-        'cus_phone':   order.phone,
-        'cus_add1':    order.street_address,
-        'cus_city':    order.city,
-        'cus_country': order.country,
-        'shipping_method': "NO",
-        'product_name': "TakaHub Order",
-        'product_category': "General",
-        'product_profile': "general",
+    amount = int(subtotal)  # MPESA expects integer
+
+    # MPESA credentials (placeholders - replace with actual)
+    consumer_key = getattr(settings, 'MPESA_CONSUMER_KEY', 'your_consumer_key')
+    consumer_secret = getattr(settings, 'MPESA_CONSUMER_SECRET', 'your_consumer_secret')
+    shortcode = getattr(settings, 'MPESA_SHORTCODE', '174379')
+    passkey = getattr(settings, 'MPESA_PASSKEY', 'your_passkey')
+
+    # Get access token
+    access_token = get_mpesa_access_token(consumer_key, consumer_secret)
+    if not access_token:
+        return redirect_with_message("Payment initialization failed.")
+
+    # Initiate STK Push
+    stk_push_response = initiate_stk_push(access_token, shortcode, passkey, phone_number, amount, f"TTS_{order.id}")
+    if stk_push_response and stk_push_response.get('ResponseCode') == '0':
+        # STK Push initiated successfully
+        order.checkout_request_id = stk_push_response['CheckoutRequestID']
+        order.save()
+        request.session['checkout_request_id'] = stk_push_response['CheckoutRequestID']
+        return redirect('payment_waiting')  # Redirect to a waiting page
+    else:
+        return redirect_with_message("Failed to initiate payment. Please try again.")
+
+
+def get_mpesa_access_token(consumer_key, consumer_secret):
+    api_url = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+    response = requests.get(api_url, auth=(consumer_key, consumer_secret))
+    if response.status_code == 200:
+        return response.json()['access_token']
+    return None
+
+
+def initiate_stk_push(access_token, shortcode, passkey, phone_number, amount, account_reference):
+    api_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    password = base64.b64encode((shortcode + passkey + timestamp).encode()).decode()
+
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
     }
 
-    response = gateway.createSession(data)
-    return redirect(response['GatewayPageURL'])   
+    payload = {
+        'BusinessShortCode': shortcode,
+        'Password': password,
+        'Timestamp': timestamp,
+        'TransactionType': 'CustomerPayBillOnline',
+        'Amount': amount,
+        'PartyA': phone_number,
+        'PartyB': shortcode,
+        'PhoneNumber': phone_number,
+        'CallBackURL': 'https://yourdomain.com/mpesa/callback/',  # Replace with actual callback URL
+        'AccountReference': account_reference,
+        'TransactionDesc': 'TakaHub Order Payment'
+    }
+
+    response = requests.post(api_url, json=payload, headers=headers)
+    return response.json() if response.status_code == 200 else None
+
+
+@login_required
+def payment_waiting(request):
+    return render(request, 'payment_waiting.html')
+
+
+@csrf_exempt
+def mpesa_callback(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        # Process the callback data
+        stk_callback = data.get('Body', {}).get('stkCallback', {})
+        checkout_request_id = stk_callback.get('CheckoutRequestID')
+        result_code = stk_callback.get('ResultCode')
+
+        if result_code == 0:
+            # Payment successful
+            callback_metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
+            transaction_id = None
+            for item in callback_metadata:
+                if item['Name'] == 'MpesaReceiptNumber':
+                    transaction_id = item['Value']
+                    break
+
+            # Find the order by checkout_request_id
+            try:
+                order = Order.objects.get(checkout_request_id=checkout_request_id)
+                order.payment_status = 'paid'
+                order.save()
+                # Clear cart for the buyer
+                CartItem.objects.filter(buyer=order.buyer).delete()
+            except Order.DoesNotExist:
+                pass  # Handle error
+
+        return HttpResponse('Callback received')
 
 def redirect_with_message(message):
     return HttpResponse(f"""

@@ -99,8 +99,8 @@
                       
                         <div class="payment-info">
                           <label>
-                            <input type="radio" name="payment_method" value="ssl" required>
-                            Pay with SSLCommerz
+                            <input type="radio" name="payment_method" value="mpesa" required>
+                            Pay with MPESA
                           </label>
                           <label>
                             <input type="radio" name="payment_method" value="cod" required>
@@ -116,7 +116,7 @@
                     const form = document.getElementById('checkout-form');
                     form.addEventListener('submit', function (e) {
                       const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-                      if (paymentMethod === 'ssl') {
+                      if (paymentMethod === 'mpesa') {
                         form.action = '/initiate-payment/';
                       } else {
                         form.action = '{% url "place_order" %}';

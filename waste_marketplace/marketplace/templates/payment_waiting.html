@@ -1,0 +1,45 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment - TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    <style>
+        .waiting-container {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1A7836;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <section class="checkout-banner">
+        <h2>Processing Payment</h2>
+        <p>Please check your phone for the MPESA prompt and enter your PIN to complete the payment.</p>
+    </section>
+    <div class="waiting-container">
+        <div class="spinner"></div>
+        <h3>Waiting for Payment Confirmation...</h3>
+        <p>Do not close this page. You will be redirected once payment is confirmed.</p>
+        <p>If the payment prompt doesn't appear, please try again or contact support.</p>
+    </div>
+</body>
+</html>
+
+{% include "footer.html" %}

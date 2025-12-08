@@ -152,3 +152,9 @@ LOGIN_REDIRECT_URL = '/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# MPESA Settings
+MPESA_CONSUMER_KEY = 'your_mpesa_consumer_key'
+MPESA_CONSUMER_SECRET = 'your_mpesa_consumer_secret'
+MPESA_SHORTCODE = '174379'  # Test shortcode
+MPESA_PASSKEY = 'your_mpesa_passkey'
