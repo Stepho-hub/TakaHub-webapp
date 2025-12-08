@@ -1,19 +1,3 @@
-"""
-URL configuration for waste_marketplace project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from marketplace.views import login_view, home, checkout
@@ -74,6 +58,9 @@ urlpatterns = [
     path('waste_seller/add-waste/', views.add_waste_listing, name='add_waste_listing'),
     path('waste_seller/edit-waste/<int:pk>/', views.edit_waste_listing, name='edit_waste_listing'),
     path('waste_seller/delete-waste/<int:pk>/', views.delete_waste_listing, name='delete_waste_listing'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('help/', views.help, name='help'),
+    path('terms/', views.terms, name='terms'),
 
 ]
 

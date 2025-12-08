@@ -25,8 +25,7 @@
 .checkout-banner {
     text-align: center;
     padding: 50px 0;
-    background: url('/static/images/bg.png') no-repeat center;
-    background-size: cover;
+    background: none;
     color: #000;
 }
 

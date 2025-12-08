@@ -1,0 +1,208 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <style>
+        .help-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
+        .help-content h1 {
+            color: #1A7836;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .help-section {
+            margin-bottom: 40px;
+        }
+        .help-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #E9FFF0;
+            padding-bottom: 10px;
+        }
+        .help-section h3 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .help-section p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .help-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .help-section li {
+            margin-bottom: 8px;
+        }
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .faq-question {
+            font-weight: bold;
+            color: #1A7836;
+            margin-bottom: 8px;
+        }
+        .faq-answer {
+            color: #555;
+        }
+        .contact-info {
+            background: #E9FFF0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<section class="contact-section">
+    <div class="contact-banner">
+        <h2>Help Center</h2>
+        <p><a href="/">Home</a> > Help Center</p>
+    </div>
+
+    <div class="help-content">
+        <h1>How Can We Help You?</h1>
+
+        <div class="help-section">
+            <h2>Getting Started</h2>
+            <p>Welcome to TakaHub! Here's how to get started with our platform:</p>
+            <h3>For Buyers</h3>
+            <ul>
+                <li>Create a free account</li>
+                <li>Browse waste materials and upcycled products</li>
+                <li>Add items to your cart</li>
+                <li>Complete checkout and payment</li>
+                <li>Track your orders and deliveries</li>
+            </ul>
+
+            <h3>For Sellers (Waste Sellers & Artisans)</h3>
+            <ul>
+                <li>Register with your specific role</li>
+                <li>Complete your profile information</li>
+                <li>List your materials or products</li>
+                <li>Manage your listings and orders</li>
+                <li>Communicate with buyers and drivers</li>
+            </ul>
+
+            <h3>For Delivery Drivers</h3>
+            <ul>
+                <li>Register as a driver</li>
+                <li>Update your profile and availability</li>
+                <li>Accept delivery assignments</li>
+                <li>Update delivery status</li>
+                <li>Manage your schedule and earnings</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I create an account?</div>
+                <div class="faq-answer">Click on the "Account" button in the navigation bar and select "Sign Up". Fill in your details and choose your role (Buyer, Artisan, Waste Seller, or Driver).</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I list waste materials for sale?</div>
+                <div class="faq-answer">Register as a Waste Seller, go to your profile, and click "List Waste". Fill in the material details, price, quantity, and location.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do artisans list upcycled products?</div>
+                <div class="faq-answer">Register as an Artisan, access your dashboard, and click "Add New Product". Upload images, set pricing, and provide product descriptions.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How does the delivery system work?</div>
+                <div class="faq-answer">When you place an order, our system assigns a driver. You can track the delivery status in real-time through your order details.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What payment methods are accepted?</div>
+                <div class="faq-answer">We accept cash on delivery and SSLCommerz payment gateway for secure online payments.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I contact customer support?</div>
+                <div class="faq-answer">Use the floating communication widget on any page, visit our Contact page, or reach us via WhatsApp or email.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I cancel or modify my order?</div>
+                <div class="faq-answer">Orders can be cancelled if they haven't been packed yet. Contact us immediately if you need to make changes.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How do I leave a review?</div>
+                <div class="faq-answer">After your order is delivered, go to your order details and click "Write Review" to rate products and drivers.</div>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2>Account Management</h2>
+            <h3>Updating Your Profile</h3>
+            <p>Go to your profile page to update personal information, contact details, and role-specific settings.</p>
+
+            <h3>Password Reset</h3>
+            <p>Use the "Change Password" link in your profile or contact support if you forget your password.</p>
+
+            <h3>Account Security</h3>
+            <p>We use encryption and secure servers to protect your data. Always use strong passwords and keep your account information private.</p>
+        </div>
+
+        <div class="help-section">
+            <h2>Safety and Guidelines</h2>
+            <h3>Buying Safely</h3>
+            <ul>
+                <li>Verify seller information before purchasing</li>
+                <li>Use secure payment methods</li>
+                <li>Check product descriptions and images carefully</li>
+                <li>Report suspicious activities</li>
+            </ul>
+
+            <h3>Selling Guidelines</h3>
+            <ul>
+                <li>Provide accurate product descriptions</li>
+                <li>Upload clear, honest photos</li>
+                <li>Respond promptly to buyer inquiries</li>
+                <li>Maintain good communication</li>
+            </ul>
+
+            <h3>Community Standards</h3>
+            <ul>
+                <li>Treat all users with respect</li>
+                <li>Avoid fraudulent activities</li>
+                <li>Report violations to our support team</li>
+                <li>Follow local laws and regulations</li>
+            </ul>
+        </div>
+
+        <div class="contact-info">
+            <h3>Still Need Help?</h3>
+            <p>Our support team is here to assist you. Contact us through any of these channels:</p>
+            <p><strong>WhatsApp:</strong> +254 707 855 656<br>
+            <strong>Email:</strong> somtechhub@gmail.com<br>
+            <strong>Phone:</strong> +254 746 852 868</p>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
+{% include "footer.html" %}

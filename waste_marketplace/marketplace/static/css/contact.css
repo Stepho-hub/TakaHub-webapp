@@ -12,8 +12,7 @@ body {
 .contact-banner {
     text-align: center;
     padding: 50px 0;
-    background: url('/static/images/bg.png') no-repeat center;
-    background-size: cover;
+    background: none;
     color: #000;
 }
 
@@ -119,22 +118,3 @@ body {
     background-color: #8a6f3f;
 }
 
-/* Footer Section */
-.contact-footer {
-    display: flex;
-    justify-content: space-around;
-    padding: 40px 0;
-    background: #f4ede4;
-    margin-top: 40px;
-    text-align: center;
-}
-
-.footer-item h4 {
-    margin: 0;
-    font-weight: bold;
-}
-
-.footer-item p {
-    margin-top: 5px;
-    font-size: 14px;
-}

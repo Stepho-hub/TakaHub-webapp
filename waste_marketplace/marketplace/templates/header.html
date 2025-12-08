@@ -13,200 +13,471 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .header {
+        .navbar {
+            background: linear-gradient(135deg, #1A7836 0%, #84E4A2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            position: relative;
+            height: 70px;
         }
 
-        /* Logo styling (Top-left corner) */
         .logo {
-            left: 10px;
-            display: flex; /* Use flexbox to align items horizontally */
-            align-items: center; /* Vertically align the items in the center */
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
         .logo img {
-            height: 50px;
+            height: 45px;
             width: auto;
-            margin-right: 0px;
+            margin-right: 10px;
         }
 
         .logo h1 {
-            font-size: 28px;
-            font-weight: bold;
             color: #fff;
-            margin: 0;
-            font-family: tahoma;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .nav-links {
+        .nav-menu {
             display: flex;
-            gap: 20px;
-            margin-left: auto;
+            list-style: none;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            margin-right: 20px;
         }
 
-        .nav-links a {
-            text-decoration: none;
+        .nav-menu a {
             color: #fff;
-            font-size: 16px;
+            text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: #E8F5E8;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            padding: 5px 10px;
+        .nav-menu a.active {
+            font-weight: 500;
         }
 
-        .nav-links .auth-btn {
-            background-color: #FF5722;
-            color: #fff !important;
+        .nav-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .nav-menu a.active {
+            background-color: #E9FFF0;
+            color: #1A7836;
+        }
+
+        .account-dropdown {
+            position: relative;
+        }
+
+        .account-btn {
+            background: #fff;
+            color: #1A7836;
+            border: none;
             padding: 10px 20px;
             border-radius: 25px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .nav-links .auth-btn:hover {
-            background-color: #D84315;
-            color: #fff !important;
-            text-decoration: none;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        .icons {
+            cursor: pointer;
             display: flex;
-            gap: 20px;
-            margin-left: 30px;
-        }
-
-        .icons a {
-            color: #fff;
-            font-size: 22px;
+            align-items: center;
+            gap: 8px;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .icons a:hover {
-            color: #E8F5E8;
-            transform: scale(1.1);
+        .account-btn:hover {
+            background: #E9FFF0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-    </style>
-    <style>
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px 15px;
-                flex-wrap: wrap;
-            }
-            .logo h1 {
-                font-size: 24px;
-            }
-            .nav-links {
-                order: 3;
-                width: 100%;
-                justify-content: center;
+
+        .account-btn i {
+            font-size: 14px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #fff;
+            min-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1000;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: normal;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #E9FFF0;
+            color: #1A7836;
+        }
+
+        .logout-link {
+            color: #FF5722 !important;
+            font-weight: 600;
+        }
+
+        .logout-link:hover {
+            background-color: rgba(255, 87, 34, 0.1) !important;
+            color: #D84315 !important;
+        }
+
+        .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            transition: 0.3s;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: #1A7836;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu .nav-menu {
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .mobile-menu .account-dropdown {
+            width: 100%;
+        }
+
+        .mobile-menu .dropdown-content {
+            position: static;
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-menu {
                 gap: 10px;
-                margin-top: 10px;
+                margin-right: 15px;
             }
-            .icons {
-                order: 2;
-                margin-left: 10px;
+            .nav-menu a {
+                font-size: 14px;
+                padding: 6px 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .account-dropdown {
+                display: none;
+            }
+            .mobile-menu .nav-menu,
+            .mobile-menu .account-dropdown {
+                display: flex;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <!-- Logo Section -->
-    <div class="logo">
-        <img src="/static/images/logo.png" alt="TakaHub Logo">
-        <h1>TakaHub</h1>
+<nav class="navbar">
+    <div class="navbar-container">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="TakaHub Logo">
+            <h1>TakaHub</h1>
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
+            <li><a href="{% url 'trash_item_list' %}" {% if request.resolver_match.url_name == 'trash_item_list' %}class="active"{% endif %}>Waste Listings</a></li>
+            <li><a href="{% url 'upcycled_products' %}" {% if request.resolver_match.url_name == 'upcycled_products' %}class="active"{% endif %}>Upcycled Products</a></li>
+            <li><a href="/about/" {% if 'about' in request.path %}class="active"{% endif %}>About Us</a></li>
+            <li><a href="/contact/" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
+        </ul>
+
+        <div class="account-dropdown">
+            <button class="account-btn">
+                <i class="fas fa-user"></i>
+                {% if user.is_authenticated %}
+                    Account
+                {% else %}
+                    Login
+                {% endif %}
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content">
+                {% if user.is_authenticated %}
+                    {% if user.role == 'buyer' %}
+                        <a href="{% url 'my_orders' %}">My Orders</a>
+                        <a href="/cart/">My Cart</a>
+                        <a href="{% url 'buyer_profile' %}">My Profile</a>
+                    {% elif user.role == 'artisan' %}
+                        <a href="{% url 'listed_products' %}">My Upcycled Products</a>
+                        <a href="{% url 'product_listing' %}">Add New Product</a>
+                        <a href="{% url 'artisan_profile' %}">My Profile</a>
+                    {% elif user.role == 'waste_seller' %}
+                        <a href="{% url 'add_waste_listing' %}">Add Waste Listing</a>
+                        <a href="{% url 'waste_seller_listed_waste' %}">My Waste Listings</a>
+                        <a href="{% url 'waste_seller_profile' %}">My Profile</a>
+                    {% elif user.role == 'driver' %}
+                        <a href="{% url 'driver_dashboard' %}">My Deliveries</a>
+                        <a href="{% url 'delivery_history' %}">Delivery Schedule</a>
+                        <a href="{% url 'driver_profile' %}">My Profile</a>
+                    {% elif user.is_staff or user.is_superuser %}
+                        <a href="/admin/">Admin Dashboard</a>
+                        <a href="/admin/auth/user/">User Management</a>
+                        <a href="/admin/marketplace/upcycledproduct/">Product Approvals</a>
+                        <a href="/admin/marketplace/trashitem/">Waste Listings Management</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
 
-    <!-- Navigation Links -->
-    <div class="nav-links">
-        {% if user.is_authenticated %}
-            {% if user.role == 'driver' %}
-                <a href="{% url 'driver_dashboard' %}">Home</a>
-            {% else %}
-                <a href="{% url 'home' %}">Home</a>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'home' %}">Home</a>
-        {% endif %}
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="nav-menu">
+            <li><a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
+            <li><a href="{% url 'trash_item_list' %}" {% if request.resolver_match.url_name == 'trash_item_list' %}class="active"{% endif %}>Waste Listings</a></li>
+            <li><a href="{% url 'upcycled_products' %}" {% if request.resolver_match.url_name == 'upcycled_products' %}class="active"{% endif %}>Upcycled Products</a></li>
+            <li><a href="/about/" {% if 'about' in request.path %}class="active"{% endif %}>About Us</a></li>
+            <li><a href="/contact/" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
+        </ul>
 
-        <a href="/about/" {% if 'about' in request.path %}class="active"{% endif %}>About</a>
-        <a href="/contact/" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a>
-
-        {% if request.user.is_authenticated and request.user.role == 'artisan' %}
-            <a href="{% url 'listed_products'  %}">My Listings</a>
-        {% endif %}
-
-        {% if request.user.is_authenticated and request.user.role == 'waste_seller' %}
-            <a href="{% url 'waste_seller_listed_waste'  %}">Waste Listing</a>
-            <a href="{% url 'add_waste_listing'  %}">List Waste</a>
-        {% endif %}
-
-        {% if request.user.is_authenticated %}
-            {% if request.user.role == 'artisan' or request.user.role == 'buyer' %}
-                <a href="{% url 'my_orders'  %}">My Orders</a>
-            {% endif %}
-        {% endif %}
-
-        {% if user.is_authenticated %}
-            {% if user.role == 'driver' %}
-                <a href="{% url 'driver_reviews' %}">Reviews</a>
-            {% endif %}
-        {% endif %}
-
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="auth-btn">Sign Out</a>
-        {% else %}
-            <a href="{% url 'login' %}" class="auth-btn">Sign In</a>
-        {% endif %}
+        <div class="account-dropdown">
+            <div class="dropdown-content">
+                {% if user.is_authenticated %}
+                    {% if user.role == 'buyer' %}
+                        <a href="{% url 'my_orders' %}">My Orders</a>
+                        <a href="/cart/">My Cart</a>
+                        <a href="{% url 'buyer_profile' %}">My Profile</a>
+                    {% elif user.role == 'artisan' %}
+                        <a href="{% url 'listed_products' %}">My Upcycled Products</a>
+                        <a href="{% url 'product_listing' %}">Add New Product</a>
+                        <a href="{% url 'artisan_profile' %}">My Profile</a>
+                    {% elif user.role == 'waste_seller' %}
+                        <a href="{% url 'add_waste_listing' %}">Add Waste Listing</a>
+                        <a href="{% url 'waste_seller_listed_waste' %}">My Waste Listings</a>
+                        <a href="{% url 'waste_seller_profile' %}">My Profile</a>
+                    {% elif user.role == 'driver' %}
+                        <a href="{% url 'driver_dashboard' %}">My Deliveries</a>
+                        <a href="{% url 'delivery_history' %}">Delivery Schedule</a>
+                        <a href="{% url 'driver_profile' %}">My Profile</a>
+                    {% elif user.is_staff or user.is_superuser %}
+                        <a href="/admin/">Admin Dashboard</a>
+                        <a href="/admin/auth/user/">User Management</a>
+                        <a href="/admin/marketplace/upcycledproduct/">Product Approvals</a>
+                        <a href="/admin/marketplace/trashitem/">Waste Listings Management</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
+</nav>
 
-    <!-- Icon Links -->
-    <div class="icons">
-        {% if user.is_authenticated %}
-            {% if user.role == 'artisan' %}
-                <a href="{% url 'artisan_profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% elif user.role == 'buyer' %}
-                <a href="{% url 'buyer_profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% elif user.role == 'driver' %}
-                <a href="{% url 'driver_profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% elif user.role == 'waste_seller' %}
-                <a href="{% url 'waste_seller_profile' %}"><i class="fa-regular fa-user"></i></a>
-            {% endif %}
-        {% else %}
-            <a href="{% url 'login' %}"><i class="fa-regular fa-user"></i></a>
-        {% endif %}
-        
-        {% if request.user.is_authenticated %}
-            {% if request.user.role == 'artisan' or request.user.role == 'buyer' %}
-                <a href="{% url 'search_results' %}"><i class="fa-solid fa-magnifying-glass"></i></a>
-                <a href="#"><i class="fa-regular fa-heart"></i></a>
-                <a href="/cart/"><i class="fa-solid fa-cart-shopping"></i></a>
-            {% endif %}
-        {% endif %}
-
+<!-- Floating Communication Widget -->
+<div class="communication-widget">
+    <div class="widget-toggle" onclick="toggleCommunicationWidget()">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div class="widget-content" id="communicationWidget">
+        <a href="https://wa.me/254707855656?text=Hello%20TakaHub,%20I%20would%20like%20to%20make%20an%20enquiry" class="comm-btn whatsapp" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span>WhatsApp</span>
+        </a>
+        <a href="mailto:somtechhub@gmail.com?subject=Enquiry&body=Hello%20TakaHub,%0D%0A" class="comm-btn email">
+            <i class="fas fa-envelope"></i>
+            <span>Email</span>
+        </a>
+        <a href="/contact/" class="comm-btn contact">
+            <i class="fas fa-phone"></i>
+            <span>Contact</span>
+        </a>
     </div>
 </div>
+
+<style>
+    .communication-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1001;
+    }
+
+    .widget-toggle {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #1A7836, #84E4A2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 24px;
+    }
+
+    .widget-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    .widget-content {
+        display: none;
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        overflow: hidden;
+        min-width: 200px;
+    }
+
+    .widget-content.active {
+        display: block;
+    }
+
+    .comm-btn {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s ease;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .comm-btn:last-child {
+        border-bottom: none;
+    }
+
+    .comm-btn:hover {
+        background-color: #E9FFF0;
+        color: #1A7836;
+    }
+
+    .comm-btn i {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+
+    .comm-btn.whatsapp i {
+        color: #25D366;
+    }
+
+    .comm-btn.email i {
+        color: #EA4335;
+    }
+
+    .comm-btn.contact i {
+        color: #1A7836;
+    }
+
+    @media (max-width: 768px) {
+        .communication-widget {
+            bottom: 15px;
+            right: 15px;
+        }
+        .widget-toggle {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+<script>
+    function toggleCommunicationWidget() {
+        const widget = document.getElementById('communicationWidget');
+        widget.classList.toggle('active');
+    }
+
+    // Close widget when clicking outside
+    document.addEventListener('click', function(event) {
+        const widget = document.querySelector('.communication-widget');
+        const toggle = document.querySelector('.widget-toggle');
+        if (!widget.contains(event.target)) {
+            document.getElementById('communicationWidget').classList.remove('active');
+        }
+    });
+</script>
 
 </body>
 </html>

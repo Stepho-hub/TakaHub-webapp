@@ -49,9 +49,8 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')  # Redirect to login page after logout
+    return redirect('home')  # Redirect to home page after logout
 
-@login_required
 def home(request):
     featured_products = UpcycledProduct.objects.order_by('-id')[:4]
     featured_trash_items = TrashItem.objects.order_by('-id')[:4]  # or any filter you like
@@ -127,9 +126,27 @@ def delivery_history(request):
     }
     return render(request, 'delivery_history.html', context)
 
-@login_required
 def contact(request):
-    return render(request, 'contact.html')
+    from .forms import ContactForm
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Process the form (e.g., send email)
+            # For now, just show success message
+            messages.success(request, 'Thank you for your message! We will get back to you soon.')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})
+
+def privacy(request):
+    return render(request, 'privacy.html')
+
+def help(request):
+    return render(request, 'help.html')
+
+def terms(request):
+    return render(request, 'terms.html')
 
 @login_required
 def cart(request):
@@ -144,7 +161,6 @@ def cart(request):
     })
     
     
-@login_required
 def about(request):
     return render(request, 'about.html')
 
@@ -237,13 +253,11 @@ def buyer_profile(request):
     return render(request, 'buyer_profile.html', {'profile': profile})
 
 
-@login_required
 def upcycled_product_details(request, slug):
     product = get_object_or_404(UpcycledProduct, slug=slug)
     return render(request, 'upcycled_product_details.html', {'product': product})
 
 
-@login_required
 def upcycled_products(request):
     products = UpcycledProduct.objects.all().order_by('-id')
     paginator = Paginator(products, 12)  # 12 products per page
@@ -305,8 +319,16 @@ def add_to_cart(request, model_name, object_id):
             return redirect('upcycled_product_details', slug=product.slug)
 
 
-    # 3. Quantity from POST, clamped to [1..stock]
-    qty = int(request.POST.get('quantity', 1))
+    # 3. Handle GET or POST
+    if request.method == 'GET':
+        qty = 1
+        action = request.GET.get('action')
+        next_url = request.GET.get('next')
+    else:
+        qty = int(request.POST.get('quantity', 1))
+        action = request.POST.get('action')
+        next_url = request.POST.get('next')
+
     # clamp to product.quantity for trash, or product.stock_availability for upcycled
     max_stock = getattr(product, 'quantity', None) or product.stock_availability
     qty = max(1, min(qty, max_stock))
@@ -323,12 +345,11 @@ def add_to_cart(request, model_name, object_id):
         cart_item.save()
 
     messages.success(request, "Item added to cart!")
-    
-    action = request.POST.get('action')
+
     if action == 'buy':
         return redirect('cart')
-    
-    return redirect(request.POST.get('next'))
+
+    return redirect(next_url or 'home')
 
 
 @login_required
@@ -346,7 +367,6 @@ def trash_item_list(request):
     return render(request, "trash_items.html", {"page_obj": page_obj})
 
 
-@login_required
 def trash_item_details(request, slug):
     product = get_object_or_404(TrashItem, slug=slug)
     return render(request, 'trash_item_details.html', {'product': product})

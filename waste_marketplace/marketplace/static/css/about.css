@@ -29,7 +29,7 @@ nav a:hover {
 }
 /* Banner Section */
 .banner {
-    background: url('/static/images/bg.png') center/cover no-repeat;
+    background: none;
     color: #000;
     text-align: center;
     padding: 50px 0;
@@ -125,44 +125,5 @@ nav a:hover {
     margin: 10px 0;
 }
 
-/* Join Us Section */
-.join-us {
-    margin: 40px 0;
-    padding: 20px;
-    background: #fff4e6;
-    border-radius: 12px;
-}
-
-.join-us h2 {
-    margin-bottom: 15px;
-}
-
-.join-us p {
-    line-height: 1.6;
-}
 
 
-/* Footer */
-footer {
-    background: #f4ede4;
-    padding: 30px 0;
-    margin-top: 40px;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-
-.footer-item {
-    text-align: center;
-}
-
-.footer-item h3 {
-    color: #8d7146;
-}
-
-.footer-item p {
-    margin: 5px 0;
-}
