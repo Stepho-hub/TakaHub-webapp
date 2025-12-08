@@ -38,7 +38,7 @@ TakaHub is a waste management and upcycled product marketplace platform. It enab
 1. **Clone the repository**
 
    ```sh
-   git clone https://github.com/maruf346/TakaHub.git
+   git clone https://github.com/Stepho-hub/TakaHub-webapp
    cd TakaHub
    ```
 
