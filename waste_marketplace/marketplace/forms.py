@@ -17,6 +17,8 @@ class UpcycledProductForm(forms.ModelForm):
         ]
 
 class TrashItemForm(forms.ModelForm):
+    quantity = forms.IntegerField(label="Quantity (KGS)")
+
     class Meta:
         model = TrashItem
         fields = [

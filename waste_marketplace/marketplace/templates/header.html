@@ -21,9 +21,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 25px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            background: #fff;
+            padding: 10px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            position: relative;
         }
 
         /* Logo styling (Top-left corner) */
@@ -40,11 +41,12 @@
         }
 
         .logo h1 {
-            font-size: 25px;
+            font-size: 28px;
             font-weight: bold;
-            color: #000;
+            color: #fff;
             margin: 0;
-            font-family: tahoma; 
+            font-family: tahoma;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .nav-links {
@@ -55,30 +57,36 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #000;
+            color: #fff;
             font-size: 16px;
+            font-weight: 500;
             transition: color 0.3s ease;
         }
 
-        .nav-links a:hover {
-            color: #555;
+        .nav-links a:hover, .nav-links a.active {
+            color: #E8F5E8;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 5px 10px;
         }
 
         .nav-links .auth-btn {
-            background-color: #b08a51;
+            background-color: #FF5722;
             color: #fff !important;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
             transition: all 0.3s ease;
-            border: 2px solid #b08a51;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .nav-links .auth-btn:hover {
-            background-color: #fff;
-            color: #b08a51 !important;
-            border-color: #b08a51;
+            background-color: #D84315;
+            color: #fff !important;
             text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .icons {
@@ -88,13 +96,36 @@
         }
 
         .icons a {
-            color: #000;
-            font-size: 20px;
-            transition: color 0.3s ease;
+            color: #fff;
+            font-size: 22px;
+            transition: all 0.3s ease;
         }
 
         .icons a:hover {
-            color: #555;
+            color: #E8F5E8;
+            transform: scale(1.1);
+        }
+    </style>
+    <style>
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 15px;
+                flex-wrap: wrap;
+            }
+            .logo h1 {
+                font-size: 24px;
+            }
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            .icons {
+                order: 2;
+                margin-left: 10px;
+            }
         }
     </style>
 </head>
@@ -119,12 +150,16 @@
             <a href="{% url 'home' %}">Home</a>
         {% endif %}
 
+        <a href="/about/" {% if 'about' in request.path %}class="active"{% endif %}>About</a>
+        <a href="/contact/" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a>
+
         {% if request.user.is_authenticated and request.user.role == 'artisan' %}
             <a href="{% url 'listed_products'  %}">My Listings</a>
         {% endif %}
 
         {% if request.user.is_authenticated and request.user.role == 'waste_seller' %}
-            <a href="{% url 'waste_seller_listed_waste'  %}">My Waste Listings</a>
+            <a href="{% url 'waste_seller_listed_waste'  %}">Waste Listing</a>
+            <a href="{% url 'add_waste_listing'  %}">List Waste</a>
         {% endif %}
 
         {% if request.user.is_authenticated %}
@@ -138,9 +173,6 @@
                 <a href="{% url 'driver_reviews' %}">Reviews</a>
             {% endif %}
         {% endif %}
-        
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
 
         {% if user.is_authenticated %}
             <a href="{% url 'logout' %}" class="auth-btn">Sign Out</a>

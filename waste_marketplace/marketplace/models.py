@@ -50,11 +50,23 @@ DELIVERY_STATUS_CHOICES = [
     ('delivered', 'Delivered'),
 ]
 
+WASTE_CATEGORY_CHOICES = [
+    ('plastics', 'Plastics'),
+    ('metals', 'Metals'),
+    ('paper', 'Paper'),
+    ('glass', 'Glass'),
+    ('electronics', 'Electronics'),
+    ('textiles', 'Textiles'),
+    ('organic', 'Organic'),
+    ('others', 'Others'),
+]
+
 # Waste Materials Model
 class TrashItem(models.Model):
     #product_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trash_items', null=True, blank=True)
     material_name = models.CharField(max_length=255, default="")  # Change as needed
-    category = models.CharField(max_length=100, default="")  # Change as needed
+    category = models.CharField(max_length=100, choices=WASTE_CATEGORY_CHOICES, default="")  # Change as needed
     description = models.TextField()
     condition = models.CharField(max_length=50, default="")  # Set a meaningful default
     quantity = models.IntegerField(default=0)

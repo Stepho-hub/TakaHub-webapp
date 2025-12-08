@@ -147,7 +147,7 @@
                     {% endif %}
 
                     <p><span class="product-label">Price:</span> KSh {{ item.price }}</p>
-                    <p><span class="product-label">Quantity:</span> {{ item.quantity }}</p>
+                    <p><span class="product-label">Quantity:</span> {{ item.quantity }}{% if item.content_type.model == 'trashitem' %} KGS{% endif %}</p>
                     <p><span class="product-label">Subtotal:</span> KSh {{ item.quantity|floatformat:2 }} × {{ item.price }} = KSh {{ item.subtotal|floatformat:2 }}</p>
                 </div>
             </div>
