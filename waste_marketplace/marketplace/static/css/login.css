@@ -1,0 +1,156 @@
+/* ------------ GLOBAL ------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #d9fdd3, #b7ffd6, #84e4a2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* ------------ FLOATING LOGO ------------ */
+.top-logo {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.top-logo img {
+    height: 60px;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+}
+
+.top-logo h1 {
+    font-size: 28px;
+    margin-top: 5px;
+    color: #0f5132;
+}
+
+/* ------------ GLASS CARD ------------ */
+.glass-card {
+    width: 380px;
+    padding: 40px 35px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.glass-card h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    color: #0a3622;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* ------------ MESSAGE ------------ */
+.msg {
+    color: red;
+    margin-bottom: 10px;
+}
+
+/* ------------ INPUT BOX (NEOMORPHIC) ------------ */
+.input-box {
+    position: relative;
+    margin: 22px 0;
+}
+
+.input-box input,
+.input-box select {
+    width: 100%;
+    padding: 13px 15px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: #e9fff0;
+    box-shadow:
+        inset 5px 5px 10px rgba(0, 0, 0, 0.08),
+        inset -5px -5px 10px rgba(255, 255, 255, 0.8);
+}
+
+.input-box label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #e9fff0;
+    padding: 0 6px;
+    font-size: 13px;
+    color: #0a3622;
+    border-radius: 5px;
+}
+
+.select-box select {
+    cursor: pointer;
+}
+
+.select-label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #e9fff0;
+    padding: 0 6px;
+    font-size: 13px;
+    color: #0a3622;
+}
+
+/* ------------ LOGIN BUTTON ------------ */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    background: #0f5132;
+    color: white;
+    border: none;
+    font-size: 17px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.login-btn:hover {
+    background: #0c3d27;
+}
+
+/* ------------ LINKS ------------ */
+.extra-links {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.extra-links a {
+    text-decoration: none;
+    color: #0f5132;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
+
+/* ------------ RESPONSIVE ------------ */
+@media (max-width: 480px) {
+    .glass-card {
+        width: 90%;
+        padding: 30px;
+    }
+}

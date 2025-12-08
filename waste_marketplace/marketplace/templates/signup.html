@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up | TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+</head>
+
+<body>
+
+    <!-- Floating Logo (same as Login) -->
+    <div class="top-logo">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" />
+        <h1>TakaHub</h1>
+    </div>
+
+    <!-- Glass Signup Card -->
+    <div class="glass-card">
+
+        <h2>Create an Account</h2>
+        <p class="subtitle">Join TakaHub and start your journey</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="msg">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+
+            <div class="form-container">
+                {{ form.as_p }}
+            </div>
+
+            <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+
+        <div class="extra-links">
+            <a href="{% url 'login' %}">Already have an account? Login</a>
+        </div>
+    </div>
+
+</body>
+</html>

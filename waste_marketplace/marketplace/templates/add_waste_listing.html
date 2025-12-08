@@ -1,0 +1,138 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Waste Listing - TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/product_listing.css' %}">
+</head>
+
+<body>
+
+    <!-- Banner Section -->
+    <section class="product-banner">
+        <h2>Add Waste Listing</h2>
+        <p><a href="/">Home</a> > Add Waste Listing</p>
+    </section>
+
+    <!-- Form Section -->
+    <div class="container">
+        <div class="form-section">
+            <h2>Waste Material Details</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.material_name.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.material_name }}
+                    {{ form.material_name.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.category.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.category }}
+                    {{ form.category.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.description.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.description }}
+                    {{ form.description.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.price.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.price }}
+                    {{ form.price.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.quantity.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.quantity }}
+                    {{ form.quantity.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.images.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.images }}
+                    {{ form.images.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.location.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.location }}
+                    {{ form.location.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.condition.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.condition }}
+                    {{ form.condition.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.trash_point.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.trash_point }}
+                    {{ form.trash_point.errors }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-label">
+                    {{ form.tags.label_tag }}
+                  </div>
+                  <div class="form-input">
+                    {{ form.tags }}
+                    {{ form.tags.errors }}
+                  </div>
+                </div>
+
+
+                <button type="submit">Submit Waste Listing</button>
+              </form>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
+{% include "footer.html" %}

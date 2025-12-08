@@ -1,0 +1,149 @@
+/* ------------ GLOBAL ------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d9fdd3, #b7ffd6, #84e4a2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+/* ------------ FLOATING LOGO ------------ */
+.top-logo {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.top-logo img {
+    height: 60px;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+}
+
+.top-logo h1 {
+    font-size: 28px;
+    color: #0f5132;
+    margin-top: 5px;
+}
+
+/* ------------ GLASS CARD ------------ */
+.glass-card {
+    width: 700px;
+    max-width: 95%;
+    padding: 40px 50px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.glass-card h2 {
+    text-align: center;
+    font-size: 32px;
+    color: #0a3622;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* ------------ ERROR MESSAGE ------------ */
+.msg {
+    color: red;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+/* ------------ DJANGO FORM FIELDS ------------ */
+form p {
+    margin-bottom: 18px;
+    font-size: 15px;
+    color: #0a3622;
+    font-weight: 600;
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* Neomorphic Inputs */
+form input,
+form select,
+form textarea {
+    width: 100%;
+    padding: 13px 15px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: #e9fff0;
+    box-shadow:
+        inset 5px 5px 10px rgba(0, 0, 0, 0.08),
+        inset -5px -5px 10px rgba(255, 255, 255, 0.8);
+    margin-top: 5px;
+}
+
+/* Error messages under fields */
+.errorlist {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+    list-style: none;
+}
+
+/* ------------ SIGNUP BUTTON ------------ */
+.signup-btn {
+    width: 100%;
+    padding: 14px;
+    background: #0f5132;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.signup-btn:hover {
+    background: #0c3d27;
+}
+
+/* ------------ LINKS ------------ */
+.extra-links {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.extra-links a {
+    text-decoration: none;
+    color: #0f5132;
+    font-weight: bold;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
+
+/* ------------ RESPONSIVE ------------ */
+@media (max-width: 500px) {
+    .glass-card {
+        padding: 30px;
+    }
+}

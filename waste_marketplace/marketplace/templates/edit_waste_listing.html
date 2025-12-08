@@ -1,0 +1,99 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Edit Waste Listing - TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+</head>
+
+<body>
+
+    <!-- Banner Section -->
+    <section class="product-banner">
+        <h2>Edit Waste Listing</h2>
+        <p><a href="/">Home</a> > <a href="{% url 'waste_seller_listed_waste' %}">My Waste Listings</a> > Edit Waste Listing</p>
+    </section>
+
+    <!-- Edit Waste Listing Form Section -->
+    <div class="container">
+        <div class="form-section">
+            <h2>Update Waste Material Details</h2>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Waste Image Preview -->
+                <div class="profile-pic-container">
+                    {% if waste_item.images %}
+                        <img src="{{ waste_item.images.url }}" alt="Waste Image" class="profile-pic">
+                    {% else %}
+                        <img src="{% static 'images/default_product.jpg' %}" alt="Default Waste" class="profile-pic">
+                    {% endif %}
+                    <div class="upload-file">
+                        {{ form.images }}
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label for="{{ form.material_name.id_for_label }}">Material Name</label>
+                        {{ form.material_name }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.category.id_for_label }}">Category</label>
+                        {{ form.category }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.description.id_for_label }}">Description</label>
+                        {{ form.description }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.price.id_for_label }}">Price (KSh)</label>
+                        {{ form.price }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                        {{ form.quantity }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.location.id_for_label }}">Location</label>
+                        {{ form.location }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.condition.id_for_label }}">Condition</label>
+                        {{ form.condition }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.trash_point.id_for_label }}">Trash Point</label>
+                        {{ form.trash_point }}
+                    </div>
+
+                    <div class="form-row">
+                        <label for="{{ form.tags.id_for_label }}">Tags</label>
+                        {{ form.tags }}
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit">Save Changes</button>
+                    <a href="{% url 'waste_seller_listed_waste' %}" class="logout-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+{% include "footer.html" %}
