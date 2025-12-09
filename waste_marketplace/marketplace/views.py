@@ -12,19 +12,20 @@ from .forms import UpcycledProductForm, TrashItemForm
 from django.contrib.contenttypes.models import ContentType
 from .models import CartItem, Order, OrderItem
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.contenttypes.models import ContentType
 from decimal import Decimal
 import datetime
 from marketplace.models import Review
 from django.db.models import Avg
 from users.models import DriverProfile, DriverRating
-from django.db.models import Q
+from django.db.models import Q, Count, Sum
 from itertools import chain
 import requests
 import json
 import base64
 from django.conf import settings
+from users.models import CustomUser
 
 
 def login_view(request):
@@ -40,6 +41,8 @@ def login_view(request):
                 login(request, user)
                 if role == 'driver':
                     return redirect('driver_dashboard')
+                elif role == 'admin':
+                    return redirect('admin_dashboard')
                 else:
                     return redirect('home')  # or redirect based on role if you want
             else:
@@ -701,11 +704,33 @@ def admin_dashboard(request):
     if request.user.role != 'admin':
         return HttpResponseForbidden("Access denied.")
 
+    # Analytics data
+    total_users = CustomUser.objects.count()
+    total_upcycled_products = UpcycledProduct.objects.filter(approval_status=True).count()
+    total_trash_items = TrashItem.objects.filter(approval_status=True).count()
+    total_orders = Order.objects.count()
     pending_upcycled = UpcycledProduct.objects.filter(approval_status=False)
-    # Waste items are auto-approved, so no pending waste
+
+    # User role breakdown
+    user_roles = CustomUser.objects.values('role').annotate(count=Count('role')).order_by('role')
+
+    # Recent orders (last 10)
+    recent_orders = Order.objects.select_related('buyer').order_by('-id')[:10]
+
+    # Revenue calculation (if orders have payment_status='paid')
+    total_revenue = Order.objects.filter(payment_status='paid').aggregate(
+        total=Sum('total_amount')
+    )['total'] or 0
 
     context = {
         'pending_upcycled': pending_upcycled,
+        'total_users': total_users,
+        'total_upcycled_products': total_upcycled_products,
+        'total_trash_items': total_trash_items,
+        'total_orders': total_orders,
+        'user_roles': user_roles,
+        'recent_orders': recent_orders,
+        'total_revenue': total_revenue,
     }
     return render(request, 'admin_dashboard.html', context)
 
@@ -726,6 +751,232 @@ def approve_product(request, model_name, object_id):
         messages.error(request, "Invalid product type.")
 
     return redirect('admin_dashboard')
+
+
+@login_required
+def admin_user_management(request):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    # Get all users with pagination
+    users = CustomUser.objects.all().order_by('-date_joined')
+    paginator = Paginator(users, 20)  # 20 users per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # User statistics
+    total_users = users.count()
+    active_users = users.filter(account_status='active').count()
+    suspended_users = users.filter(account_status='suspended').count()
+
+    # Role breakdown
+    role_stats = users.values('role').annotate(count=Count('role')).order_by('role')
+
+    context = {
+        'page_obj': page_obj,
+        'total_users': total_users,
+        'active_users': active_users,
+        'suspended_users': suspended_users,
+        'role_stats': role_stats,
+    }
+    return render(request, 'admin_user_management.html', context)
+
+
+@login_required
+def admin_user_detail(request, user_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    context = {
+        'user': user,
+    }
+    return render(request, 'admin_user_detail.html', context)
+
+
+@login_required
+def admin_toggle_user_status(request, user_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    user = get_object_or_404(CustomUser, id=user_id)
+
+    if user == request.user:
+        messages.error(request, "You cannot modify your own account status.")
+        return redirect('admin_user_management')
+
+    # Toggle status between active and suspended
+    if user.account_status == 'active':
+        user.account_status = 'suspended'
+        messages.success(request, f"User {user.username} has been suspended.")
+    elif user.account_status == 'suspended':
+        user.account_status = 'active'
+        messages.success(request, f"User {user.username} has been reactivated.")
+    else:
+        messages.error(request, "Cannot modify deleted user accounts.")
+
+    user.save()
+
+    # If it's an AJAX request, return JSON response
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'new_status': user.account_status,
+            'message': f"User {user.username} status updated successfully."
+        })
+
+    return redirect('admin_user_management')
+
+
+@login_required
+def admin_order_management(request):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    # Get all orders with related data
+    orders = Order.objects.select_related('buyer').prefetch_related('items').order_by('-created_at')
+    paginator = Paginator(orders, 20)  # 20 orders per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Order statistics
+    total_orders = orders.count()
+    pending_orders = orders.filter(payment_status='pending').count()
+    paid_orders = orders.filter(payment_status='paid').count()
+    completed_orders = orders.filter(delivery_status='delivered').count()
+
+    context = {
+        'page_obj': page_obj,
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'paid_orders': paid_orders,
+        'completed_orders': completed_orders,
+    }
+    return render(request, 'admin_order_management.html', context)
+
+
+@login_required
+def admin_order_detail(request, order_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    order = get_object_or_404(Order, id=order_id)
+    ordered_items = order.items.all()
+
+    # Calculate subtotal for each item
+    for item in ordered_items:
+        item.subtotal = item.quantity * item.price
+
+    context = {
+        'order': order,
+        'ordered_items': ordered_items,
+    }
+    return render(request, 'admin_order_detail.html', context)
+
+
+@login_required
+def admin_update_order_status(request, order_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    order = get_object_or_404(Order, id=order_id)
+
+    if request.method == 'POST':
+        payment_status = request.POST.get('payment_status')
+        delivery_status = request.POST.get('delivery_status')
+        assigned_driver_id = request.POST.get('assigned_driver')
+
+        if payment_status:
+            order.payment_status = payment_status
+        if delivery_status:
+            order.delivery_status = delivery_status
+        if assigned_driver_id:
+            driver = get_object_or_404(CustomUser, id=assigned_driver_id, role='driver')
+            order.assigned_delivery_guy = driver
+
+        order.save()
+        messages.success(request, f"Order #{order.id} updated successfully.")
+        return redirect('admin_order_detail', order_id=order.id)
+
+    # Get available drivers
+    available_drivers = CustomUser.objects.filter(role='driver', account_status='active')
+
+    context = {
+        'order': order,
+        'available_drivers': available_drivers,
+    }
+    return render(request, 'admin_update_order_status.html', context)
+
+
+@login_required
+def admin_bulk_product_action(request):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        product_ids = request.POST.getlist('product_ids')
+
+        if not product_ids:
+            messages.error(request, "No products selected.")
+            return redirect('admin_dashboard')
+
+        if action == 'approve':
+            UpcycledProduct.objects.filter(id__in=product_ids, approval_status=False).update(approval_status=True)
+            messages.success(request, f"Approved {len(product_ids)} product(s).")
+        elif action == 'reject':
+            UpcycledProduct.objects.filter(id__in=product_ids, approval_status=False).delete()
+            messages.success(request, f"Rejected and removed {len(product_ids)} product(s).")
+
+    return redirect('admin_dashboard')
+
+
+@login_required
+def admin_content_moderation(request):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    # Get pending products with filtering
+    status_filter = request.GET.get('status', 'pending')
+    category_filter = request.GET.get('category', '')
+    search_query = request.GET.get('search', '')
+
+    products = UpcycledProduct.objects.all()
+
+    if status_filter == 'pending':
+        products = products.filter(approval_status=False)
+    elif status_filter == 'approved':
+        products = products.filter(approval_status=True)
+
+    if category_filter:
+        products = products.filter(category__icontains=category_filter)
+
+    if search_query:
+        products = products.filter(
+            Q(product_name__icontains=search_query) |
+            Q(artisan__name__icontains=search_query) |
+            Q(artisan__username__icontains=search_query)
+        )
+
+    products = products.select_related('artisan').order_by('-listing_date')
+    paginator = Paginator(products, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Get statistics
+    pending_count = UpcycledProduct.objects.filter(approval_status=False).count()
+    approved_count = UpcycledProduct.objects.filter(approval_status=True).count()
+
+    context = {
+        'page_obj': page_obj,
+        'status_filter': status_filter,
+        'category_filter': category_filter,
+        'search_query': search_query,
+        'pending_count': pending_count,
+        'approved_count': approved_count,
+    }
+    return render(request, 'admin_content_moderation.html', context)
 
 
 @login_required

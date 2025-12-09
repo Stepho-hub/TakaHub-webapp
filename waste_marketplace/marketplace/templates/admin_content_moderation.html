@@ -1,0 +1,624 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Content Moderation - TakaHub Admin</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+    <style>
+        .content-moderation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .filters-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+    
+        .filters-header {
+            background: linear-gradient(135deg, #1A7836 0%, #84E4A2 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+        }
+    
+        .filters-header h3 {
+            color: white !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+    
+        .filters-content {
+            padding: 20px;
+        }
+    
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr auto;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+    
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+    
+        .filter-group label {
+            font-weight: 600;
+            color: #1A7836;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+    
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+    
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #1A7836;
+            box-shadow: 0 0 0 2px rgba(26, 120, 54, 0.1);
+        }
+    
+        .search-group {
+            grid-column: span 1;
+        }
+    
+        .filter-btn {
+            background: linear-gradient(135deg, #1A7836 0%, #84E4A2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(26, 120, 54, 0.2);
+        }
+    
+        .filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(26, 120, 54, 0.3);
+        }
+
+        .products-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .products-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .products-table th,
+        .products-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .products-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .products-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .product-info {
+            max-width: 250px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1A7836;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .product-category {
+            color: #666;
+            font-size: 12px;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .artisan-info {
+            max-width: 200px;
+        }
+
+        .artisan-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .artisan-username {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .price-info {
+            font-weight: 600;
+            color: #1A7836;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background-color: #1e7e34;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background-color: #bd2130;
+        }
+
+        .btn-view {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: #0056b3;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .pagination .current {
+            background-color: #1A7836;
+            color: white;
+            border-color: #1A7836;
+        }
+
+        .pagination a:hover {
+            background-color: #f8f9fa;
+        }
+
+        .stats-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1A7836;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .bulk-actions-section {
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+        }
+    
+        .bulk-actions {
+            background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 2px solid #fed7d7;
+        }
+    
+        .bulk-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    
+        .bulk-label {
+            color: #c53030;
+            font-size: 14px;
+            min-width: 120px;
+        }
+    
+        .bulk-actions select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            min-width: 150px;
+        }
+    
+        .bulk-actions select:focus {
+            outline: none;
+            border-color: #c53030;
+            box-shadow: 0 0 0 2px rgba(197, 48, 48, 0.1);
+        }
+    
+        .bulk-btn {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(197, 48, 48, 0.2);
+        }
+    
+        .bulk-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(197, 48, 48, 0.3);
+            background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+        }
+
+        @media (max-width: 1024px) {
+            .filter-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .search-group {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .search-group {
+                grid-column: span 1;
+            }
+
+            .bulk-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .bulk-label {
+                min-width: auto;
+                text-align: left;
+            }
+
+            .products-table {
+                overflow-x: auto;
+            }
+
+            .products-table table {
+                min-width: 800px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .action-btn {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<section class="product-banner">
+    <h2>Content Moderation</h2>
+    <p><a href="/admin-dashboard/">Admin Dashboard</a> > Content Moderation</p>
+</section>
+
+<div class="content-moderation-container">
+    <!-- Statistics Summary -->
+    <div class="stats-summary">
+        <div class="stat-item">
+            <span class="stat-number">{{ page_obj.paginator.count }}</span>
+            <span class="stat-label">Total Products</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ pending_count|default:0 }}</span>
+            <span class="stat-label">Pending Approval</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ approved_count|default:0 }}</span>
+            <span class="stat-label">Approved</span>
+        </div>
+    </div>
+
+    <!-- Filters and Bulk Actions Section -->
+    <div class="filters-section">
+        <div class="filters-header">
+            <h3 style="margin: 0; color: #1A7836;">🔍 Filter & Search Products</h3>
+        </div>
+
+        <div class="filters-content">
+            <form method="get" class="filters-form">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="status">📊 Status:</label>
+                        <select name="status" id="status">
+                            <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Products</option>
+                            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>⏳ Pending Approval</option>
+                            <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>✅ Approved</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="category">🏷️ Category:</label>
+                        <select name="category" id="category">
+                            <option value="">All Categories</option>
+                            <option value="Home Decor" {% if category_filter == 'Home Decor' %}selected{% endif %}>🏠 Home Decor</option>
+                            <option value="Accessories" {% if category_filter == 'Accessories' %}selected{% endif %}>💍 Accessories</option>
+                            <option value="Lighting" {% if category_filter == 'Lighting' %}selected{% endif %}>💡 Lighting</option>
+                            <option value="Fashion" {% if category_filter == 'Fashion' %}selected{% endif %}>👗 Fashion</option>
+                            <option value="Art" {% if category_filter == 'Art' %}selected{% endif %}>🎨 Art</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group search-group">
+                        <label for="search">🔎 Search:</label>
+                        <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Product name or artisan...">
+                    </div>
+
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="filter-btn">🔍 Apply Filters</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="bulk-actions-section">
+                <div class="bulk-actions">
+                    <form method="post" id="bulkForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" id="bulkAction">
+                        <div class="bulk-row">
+                            <div class="bulk-label">
+                                <strong>⚡ Bulk Actions:</strong>
+                            </div>
+                            <select id="bulkSelect">
+                                <option value="">Select Action</option>
+                                <option value="approve">✅ Approve Selected</option>
+                                <option value="reject">❌ Reject Selected</option>
+                            </select>
+                            <button type="button" onclick="applyBulkAction()" class="bulk-btn">🚀 Apply to Selected</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="products-table">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40px;"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()"></th>
+                    <th style="width: 80px;">Image</th>
+                    <th>Product Details</th>
+                    <th>Artisan</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th>Date Listed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in page_obj %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="product_ids" value="{{ product.id }}" form="bulkForm">
+                        </td>
+                        <td>
+                            {% if product.product_images %}
+                                <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}" class="product-image">
+                            {% else %}
+                                <div class="product-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #666;">No Image</div>
+                            {% endif %}
+                        </td>
+                        <td class="product-info">
+                            <span class="product-name">{{ product.product_name }}</span>
+                            <span class="product-category">{{ product.category }}</span>
+                            <div style="margin-top: 5px; font-size: 12px; color: #666;">
+                                {{ product.description|truncatechars:100 }}
+                            </div>
+                        </td>
+                        <td class="artisan-info">
+                            <div class="artisan-name">{{ product.artisan.name|default:product.artisan.username }}</div>
+                            <div class="artisan-username">@{{ product.artisan.username }}</div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ product.approval_status|yesno:'approved,pending' }}">
+                                {{ product.approval_status|yesno:"Approved,Pending" }}
+                            </span>
+                        </td>
+                        <td class="price-info">
+                            KSh {{ product.price|floatformat:0 }}
+                        </td>
+                        <td>
+                            {{ product.listing_date|date:"M d, Y" }}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'admin_dashboard' %}?approve={{ product.id }}" class="action-btn btn-approve">Approve</a>
+                                <a href="{% url 'admin_dashboard' %}?reject={{ product.id }}" class="action-btn btn-reject">Reject</a>
+                                <a href="#" class="action-btn btn-view">View</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                            No products found matching the current filters.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">« Previous</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next »</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleAllCheckboxes() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('input[name="product_ids"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function applyBulkAction() {
+    const bulkSelect = document.getElementById('bulkSelect');
+    const action = bulkSelect.value;
+
+    if (!action) {
+        alert('Please select an action.');
+        return;
+    }
+
+    const selectedProducts = document.querySelectorAll('input[name="product_ids"]:checked');
+    if (selectedProducts.length === 0) {
+        alert('Please select at least one product.');
+        return;
+    }
+
+    if (confirm(`Are you sure you want to ${action} ${selectedProducts.length} product(s)?`)) {
+        document.getElementById('bulkAction').value = action;
+        document.getElementById('bulkForm').submit();
+    }
+}
+</script>
+
+</body>
+</html>
+{% include "footer.html" %}

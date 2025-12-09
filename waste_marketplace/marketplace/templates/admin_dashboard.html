@@ -38,7 +38,427 @@
         }
         .approve-btn { background-color: #28a745; color: white; }
         .reject-btn { background-color: #dc3545; color: white; }
+
+        .analytics-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #1A7836;
+        }
+
+        .analytics-card h4 {
+            margin: 0 0 10px 0;
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .metric {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1A7836;
+            margin: 10px 0;
+        }
+
+        .sub-metric {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed, .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .bulk-approve-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .bulk-approve-btn:hover {
+            background-color: #218838;
+        }
+
+        .bulk-reject-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .bulk-reject-btn:hover {
+            background-color: #c82333;
+        }
+
+        .product-checkbox {
+            margin-right: 10px;
+        }
+
+        /* Enhanced Pending Products Section */
+        .pending-products-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #1A7836 0%, #84E4A2 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .section-stats {
+            text-align: right;
+        }
+
+        .pending-count {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .pending-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bulk-actions-bar {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .bulk-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .select-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .select-btn {
+            background: white;
+            border: 2px solid #1A7836;
+            color: #1A7836;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .select-btn:hover {
+            background: #1A7836;
+            color: white;
+        }
+
+        .action-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .view-all-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .view-all-link a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .products-grid {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #fafafa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            border-color: #1A7836;
+            box-shadow: 0 4px 15px rgba(26, 120, 54, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .product-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-wrapper {
+            flex-shrink: 0;
+        }
+
+        .product-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #1A7836;
+        }
+
+        .product-title h4 {
+            margin: 0 0 8px 0;
+            color: #1A7836;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-tag {
+            background: linear-gradient(135deg, #1A7836 0%, #84E4A2 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-details {
+            margin-bottom: 15px;
+        }
+
+        .artisan-info,
+        .date-info,
+        .description-preview {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+
+        .artisan-label,
+        .date-label,
+        .desc-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+
+        .artisan-name,
+        .date-value {
+            color: #333;
+            font-size: 13px;
+        }
+
+        .desc-text {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .approve-btn,
+        .reject-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .approve-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
+        }
+
+        .approve-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .reject-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+        }
+
+        .reject-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .empty-state h4 {
+            margin: 0 0 10px 0;
+            color: #1A7836;
+            font-size: 18px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 14px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .bulk-actions-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .bulk-controls {
+                justify-content: center;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .product-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .product-actions {
+                justify-content: center;
+            }
+        }
     </style>
+
+    <script>
+    function selectAllProducts() {
+        const checkboxes = document.querySelectorAll('.product-checkbox');
+        checkboxes.forEach(checkbox => checkbox.checked = true);
+    }
+
+    function deselectAllProducts() {
+        const checkboxes = document.querySelectorAll('.product-checkbox');
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+    }
+
+    function confirmBulkAction(action) {
+        const checkedBoxes = document.querySelectorAll('.product-checkbox:checked');
+        if (checkedBoxes.length === 0) {
+            alert('Please select at least one product.');
+            return false;
+        }
+
+        const actionText = action === 'approve' ? 'approve' : 'reject';
+        return confirm(`Are you sure you want to ${actionText} ${checkedBoxes.length} selected product(s)?`);
+    }
+    </script>
 </head>
 <body>
 
@@ -47,29 +467,178 @@
     <p><a href="/">Home</a> > Admin Dashboard</p>
 </section>
 
+<!-- Admin Navigation -->
+<div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
+    <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <h3 style="margin: 0 0 15px 0; color: #333;">Admin Panel</h3>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #1A7836;">
+            <p style="margin: 0; color: #495057; font-size: 14px;">
+                <strong>🎯 Primary Admin Interface:</strong> Use the dropdown menu in the top navigation bar to access all custom admin features. For advanced Django system administration, use the "🔧 Django Admin" link at the bottom of the dropdown.
+            </p>
+        </div>
+    </div>
+</div>
+
 <div style="max-width: 1200px; margin: auto; padding: 20px;">
 
-    <div class="pending-section">
-        <h3>Pending Upcycled Products</h3>
-        {% for product in pending_upcycled %}
-            <div class="pending-item">
-                <div class="item-details">
-                    <strong>{{ product.product_name }}</strong> by {{ product.artisan.name|default:product.artisan.username }} - KSh {{ product.price }}
-                </div>
-                <div class="actions">
-                    <form method="post" action="{% url 'approve_product' 'upcycledproduct' product.id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="approve-btn">Approve</button>
-                    </form>
-                    <form method="post" action="{% url 'reject_product' 'upcycledproduct' product.id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="reject-btn">Reject</button>
-                    </form>
+    <!-- Analytics Overview -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div class="analytics-card">
+            <h4>Total Users</h4>
+            <div class="metric">{{ total_users }}</div>
+            <div class="sub-metric">
+                {% for role_data in user_roles %}
+                    {{ role_data.role|title }}: {{ role_data.count }}{% if not forloop.last %} | {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="analytics-card">
+            <h4>Products</h4>
+            <div class="metric">{{ total_upcycled_products }}</div>
+            <div class="sub-metric">Upcycled Products</div>
+        </div>
+
+        <div class="analytics-card">
+            <h4>Waste Items</h4>
+            <div class="metric">{{ total_trash_items }}</div>
+            <div class="sub-metric">Available Materials</div>
+        </div>
+
+        <div class="analytics-card">
+            <h4>Total Orders</h4>
+            <div class="metric">{{ total_orders }}</div>
+            <div class="sub-metric">Revenue: KSh {{ total_revenue|floatformat:0 }}</div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="pending-section" style="margin-bottom: 30px;">
+        <h3>Recent Orders</h3>
+        {% if recent_orders %}
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Order ID</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Buyer</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Amount</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Status</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ddd;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                            <tr>
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">#{{ order.id }}</td>
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ order.buyer.name|default:order.buyer.username }}</td>
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">KSh {{ order.total_amount|floatformat:0 }}</td>
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">
+                                    <span class="status-badge status-{{ order.payment_status }}">
+                                        {{ order.payment_status|title }}
+                                    </span>
+                                </td>
+                                <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ order.created_at|date:"M d, Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>No orders yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Enhanced Pending Products Section -->
+    <div class="pending-products-section">
+        <div class="section-header">
+            <h3>🛍️ Pending Upcycled Products</h3>
+            <div class="section-stats">
+                <span class="pending-count">{{ pending_upcycled|length }}</span>
+                <span class="pending-label">products awaiting approval</span>
+            </div>
+        </div>
+
+        {% if pending_upcycled %}
+            <!-- Enhanced Bulk Actions -->
+            <div class="bulk-actions-bar">
+                <form method="post" action="{% url 'admin_bulk_product_action' %}" id="bulkActionForm" style="display: inline;">
+                    {% csrf_token %}
+                    <div class="bulk-controls">
+                        <div class="select-controls">
+                            <button type="button" onclick="selectAllProducts()" class="select-btn">✅ Select All</button>
+                            <button type="button" onclick="deselectAllProducts()" class="select-btn">❌ Deselect All</button>
+                        </div>
+                        <div class="action-controls">
+                            <button type="submit" name="action" value="approve" class="action-btn bulk-approve-btn" onclick="return confirmBulkAction('approve')">
+                                ✅ Approve Selected
+                            </button>
+                            <button type="submit" name="action" value="reject" class="action-btn bulk-reject-btn" onclick="return confirmBulkAction('reject')">
+                                ❌ Reject Selected
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="view-all-link">
+                    <a href="{% url 'admin_content_moderation' %}">🔍 View All Products →</a>
                 </div>
             </div>
-        {% empty %}
-            <p>No pending upcycled products.</p>
-        {% endfor %}
+
+            <!-- Enhanced Product Cards -->
+            <div class="products-grid">
+                {% for product in pending_upcycled %}
+                    <div class="product-card">
+                        <div class="product-header">
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" name="product_ids" value="{{ product.id }}" class="product-checkbox" form="bulkActionForm">
+                            </div>
+                            <div class="product-title">
+                                <h4>{{ product.product_name }}</h4>
+                                <div class="product-meta">
+                                    <span class="category-badge">{{ product.category }}</span>
+                                    <span class="price-tag">KSh {{ product.price|floatformat:0 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-details">
+                            <div class="artisan-info">
+                                <span class="artisan-label">👨‍🎨 Artisan:</span>
+                                <span class="artisan-name">{{ product.artisan.name|default:product.artisan.username }}</span>
+                            </div>
+                            <div class="date-info">
+                                <span class="date-label">📅 Created:</span>
+                                <span class="date-value">{{ product.listing_date|date:"M d, Y" }}</span>
+                            </div>
+                            {% if product.description %}
+                                <div class="description-preview">
+                                    <span class="desc-label">📝 Description:</span>
+                                    <span class="desc-text">{{ product.description|truncatechars:100 }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="product-actions">
+                            <form method="post" action="{% url 'approve_product' 'upcycledproduct' product.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="approve-btn">✅ Approve</button>
+                            </form>
+                            <form method="post" action="{% url 'reject_product' 'upcycledproduct' product.id %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="reject-btn">❌ Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">✅</div>
+                <h4>All Caught Up!</h4>
+                <p>No products are currently pending approval. All products have been reviewed.</p>
+            </div>
+        {% endif %}
     </div>
 
     <div class="pending-section">

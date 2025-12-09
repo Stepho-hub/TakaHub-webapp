@@ -1,0 +1,246 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Order #{{ order.id }} - TakaHub Admin</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+    <style>
+        .update-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .order-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .update-form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .current-status {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1A7836;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .payment-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .payment-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .delivery-ready {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .delivery-packed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .delivery-on_the_way {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .delivery-delivered {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .delivery-returned, .delivery-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .driver-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .driver-info h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+<section class="product-banner">
+    <h2>Update Order #{{ order.id }}</h2>
+    <p><a href="/admin-dashboard/">Admin Dashboard</a> > <a href="{% url 'admin_order_management' %}">Order Management</a> > <a href="{% url 'admin_order_detail' order.id %}">Order #{{ order.id }}</a> > Update Status</p>
+</section>
+
+<div class="update-form-container">
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <h3>Order Summary</h3>
+        <p><strong>Buyer:</strong> {{ order.buyer.name|default:order.buyer.username }}</p>
+        <p><strong>Total Amount:</strong> KSh {{ order.total_amount|floatformat:0 }}</p>
+        <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y \a\t H:i" }}</p>
+    </div>
+
+    <!-- Update Form -->
+    <div class="update-form">
+        <h3>Update Order Status</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Payment Status -->
+            <div class="form-group">
+                <label for="payment_status">Payment Status</label>
+                <div class="current-status">
+                    <strong>Current:</strong> <span class="status-badge payment-{{ order.payment_status }}">{{ order.payment_status|title }}</span>
+                </div>
+                <select name="payment_status" id="payment_status">
+                    <option value="">-- Keep Current --</option>
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                </select>
+            </div>
+
+            <!-- Delivery Status -->
+            <div class="form-group">
+                <label for="delivery_status">Delivery Status</label>
+                <div class="current-status">
+                    <strong>Current:</strong> <span class="status-badge delivery-{{ order.delivery_status|lower }}">{{ order.delivery_status|title }}</span>
+                </div>
+                <select name="delivery_status" id="delivery_status">
+                    <option value="">-- Keep Current --</option>
+                    <option value="ready">Ready</option>
+                    <option value="packed">Packed</option>
+                    <option value="on_the_way">On the Way</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="returned">Returned</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <!-- Driver Assignment -->
+            <div class="form-group">
+                <label for="assigned_driver">Assign Driver</label>
+                <div class="current-status">
+                    <strong>Current:</strong>
+                    {% if order.assigned_delivery_guy %}
+                        {{ order.assigned_delivery_guy.name|default:order.assigned_delivery_guy.username }}
+                    {% else %}
+                        <em>No driver assigned</em>
+                    {% endif %}
+                </div>
+                <select name="assigned_driver" id="assigned_driver">
+                    <option value="">-- Keep Current --</option>
+                    {% for driver in available_drivers %}
+                        <option value="{{ driver.id }}">{{ driver.name|default:driver.username }}</option>
+                    {% endfor %}
+                </select>
+
+                {% if available_drivers %}
+                    <div class="driver-info">
+                        <h4>Available Drivers</h4>
+                        <p>{{ available_drivers|length }} active driver(s) available for assignment.</p>
+                    </div>
+                {% else %}
+                    <div class="driver-info">
+                        <h4>No Drivers Available</h4>
+                        <p>There are currently no active drivers available for assignment.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="submit" class="action-btn btn-primary">Update Order</button>
+                <a href="{% url 'admin_order_detail' order.id %}" class="action-btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+{% include "footer.html" %}

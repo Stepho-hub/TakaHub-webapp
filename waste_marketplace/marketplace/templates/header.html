@@ -302,11 +302,12 @@
                         <a href="{% url 'driver_dashboard' %}">My Deliveries</a>
                         <a href="{% url 'delivery_history' %}">Delivery Schedule</a>
                         <a href="{% url 'driver_profile' %}">My Profile</a>
-                    {% elif user.is_staff or user.is_superuser %}
-                        <a href="/admin/">Admin Dashboard</a>
-                        <a href="/admin/auth/user/">User Management</a>
-                        <a href="/admin/marketplace/upcycledproduct/">Product Approvals</a>
-                        <a href="/admin/marketplace/trashitem/">Waste Listings Management</a>
+                    {% elif user.role == 'admin' %}
+                        <a href="{% url 'admin_dashboard' %}">📊 Admin Dashboard</a>
+                        <a href="{% url 'admin_user_management' %}">👥 User Management</a>
+                        <a href="{% url 'admin_order_management' %}">📦 Order Management</a>
+                        <a href="{% url 'admin_content_moderation' %}">🎨 Content Moderation</a>
+                        <a href="/admin/" style="border-top: 1px solid #eee; margin-top: 8px; padding-top: 12px;">🔧 Django Admin</a>
                     {% endif %}
                     <a href="{% url 'logout' %}" class="logout-link">Logout</a>
                 {% else %}
@@ -351,11 +352,12 @@
                         <a href="{% url 'driver_dashboard' %}">My Deliveries</a>
                         <a href="{% url 'delivery_history' %}">Delivery Schedule</a>
                         <a href="{% url 'driver_profile' %}">My Profile</a>
-                    {% elif user.is_staff or user.is_superuser %}
-                        <a href="/admin/">Admin Dashboard</a>
-                        <a href="/admin/auth/user/">User Management</a>
-                        <a href="/admin/marketplace/upcycledproduct/">Product Approvals</a>
-                        <a href="/admin/marketplace/trashitem/">Waste Listings Management</a>
+                    {% elif user.role == 'admin' %}
+                        <a href="{% url 'admin_dashboard' %}">📊 Admin Dashboard</a>
+                        <a href="{% url 'admin_user_management' %}">👥 User Management</a>
+                        <a href="{% url 'admin_order_management' %}">📦 Order Management</a>
+                        <a href="{% url 'admin_content_moderation' %}">🎨 Content Moderation</a>
+                        <a href="/admin/" style="border-top: 1px solid #eee; margin-top: 8px; padding-top: 12px;">🔧 Django Admin</a>
                     {% endif %}
                     <a href="{% url 'logout' %}" class="logout-link">Logout</a>
                 {% else %}
