@@ -160,9 +160,16 @@ def cart(request):
         return HttpResponseForbidden("You are not authorized to view this page.")
 
     cart_items = CartItem.objects.filter(buyer=request.user)
-    total = sum(item.subtotal() for item in cart_items)
+    # Filter out items with deleted products
+    valid_cart_items = [item for item in cart_items if item.item is not None]
+    # Remove invalid cart items from database
+    invalid_items = [item for item in cart_items if item.item is None]
+    for invalid_item in invalid_items:
+        invalid_item.delete()
+
+    total = sum(item.subtotal() for item in valid_cart_items)
     return render(request, 'cart.html', {
-        'cart_items': cart_items,
+        'cart_items': valid_cart_items,
         'total': total
     })
     

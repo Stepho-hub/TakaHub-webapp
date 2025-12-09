@@ -21,7 +21,11 @@ def update_product_rating(sender, instance, **kwargs):
 def handle_paid_order(sender, instance, **kwargs):
     if instance.payment_status == 'paid':
         for item in instance.items.all():
-            product = item.content_type.get_object_for_this_type(id=item.object_id)
+            try:
+                product = item.content_type.get_object_for_this_type(id=item.object_id)
+            except item.content_type.model_class().DoesNotExist:
+                # Product has been deleted, skip updating it
+                continue
 
             if hasattr(product, 'sold_count') and hasattr(product, 'stock_availability'):
                 product.sold_count += item.quantity

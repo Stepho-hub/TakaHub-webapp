@@ -77,7 +77,7 @@
 
     <p class="product-meta">
         <span class="product-label">By:</span>
-            {{ product.artisan.name|default:product.artisan.get_full_name|default:product.artisan.username }}
+            {% if product.artisan %}{{ product.artisan.name|default:product.artisan.get_full_name|default:product.artisan.username }}{% else %}Unknown Artisan{% endif %}
     </p>
 
     <div class="average-rating-container">

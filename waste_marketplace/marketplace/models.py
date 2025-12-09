@@ -157,6 +157,8 @@ class CartItem(models.Model):
         unique_together = ('buyer', 'content_type', 'object_id')
 
     def subtotal(self):
+        if self.item is None:
+            return 0  # Product has been deleted
         return self.quantity * self.item.price  # works as long as both models have a .price
     
     
