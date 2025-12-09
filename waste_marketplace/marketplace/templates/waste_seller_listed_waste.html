@@ -181,6 +181,7 @@
             <h3>{{ waste_item.material_name }}</h3>
             <p><strong>KSh {{ waste_item.price }}</strong></p>
             <p>Quantity: {{ waste_item.quantity }} KGS</p>
+            <p style="color: green;"><strong>Approved</strong></p>
             <a href="{% url 'trash_item_details' waste_item.slug %}" class="view-button">View Details</a>
             <div class="button-pair">
                 <a href="{% url 'edit_waste_listing' waste_item.pk %}" class="edit-btn">Edit</a>

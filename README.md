@@ -1,12 +1,13 @@
 # TakaHub
 
-TakaHub is a waste management and upcycled product marketplace platform. It enables the collection, categorization, and sale of waste materials, while also allowing artisans to create and sell upcycled products.
+TakaHub is a comprehensive waste management and upcycled product marketplace platform. It enables the collection, categorization, and sale of waste materials, while also allowing artisans to create and sell upcycled products. The platform features an admin approval system for quality control and user identification with role-based display.
 
 ## Features
 
 ### **Waste Management System**
 
 - Waste sellers (households, businesses, institutions) generate and list recyclable waste materials on the platform.
+- Waste items are automatically approved and publicly visible upon listing.
 - Workers separate and categorize materials for better organization.
 - Buyers (companies or artisans) can purchase waste materials for upcycling.
 - Delivery system for waste materials via assigned drivers.
@@ -14,16 +15,25 @@ TakaHub is a waste management and upcycled product marketplace platform. It enab
 ### **Upcycled Product Marketplace**
 
 - Artisans create and sell upcycled products.
-- Admin approval required before products appear in the marketplace.
+- Admin approval required before upcycled products appear in the marketplace.
 - Buyers can purchase products and leave ratings/reviews.
+- Artisans can view approval status of their products.
 
-### **User Roles**
+### **User Roles & Identification**
 
-- **Admin:** Manages user approvals, product verification, and platform settings.
-- **Waste Seller:** Generates and lists recyclable waste materials for sale.
-- **Driver/Delivery Guy:** Collects and delivers materials.
-- **Artisan/Crafter:** Purchases waste materials and sells upcycled products.
-- **Buyer:** Purchases waste materials or upcycled products.
+- **Admin:** Manages user approvals, product verification, and platform settings. Access to admin dashboard for approving upcycled products.
+- **Waste Seller:** Generates and lists recyclable waste materials for sale. Waste items are auto-approved.
+- **Driver/Delivery Guy:** Collects and delivers materials. Manages delivery routes and status updates.
+- **Artisan/Crafter:** Purchases waste materials and sells upcycled products. Manages product listings with approval status.
+- **Buyer:** Purchases waste materials or upcycled products. Can leave reviews and ratings.
+
+### **User Experience Features**
+
+- **User Identification:** Account button displays "Name (Role)" for easy identification (e.g., "Dan (Artisan)")
+- **Public Access:** All approved waste and upcycled products visible to logged-in and unlogged users
+- **Approval System:** Upcycled products require admin approval; waste items are auto-approved
+- **Search & Discovery:** Combined search across waste and upcycled products
+- **Role-Based Dashboards:** Tailored interfaces for each user type
 
 ## Tech Stack
 

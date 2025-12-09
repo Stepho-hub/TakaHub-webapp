@@ -63,6 +63,9 @@ urlpatterns = [
     path('privacy/', views.privacy, name='privacy'),
     path('help/', views.help, name='help'),
     path('terms/', views.terms, name='terms'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('approve/<str:model_name>/<int:object_id>/', views.approve_product, name='approve_product'),
+    path('reject/<str:model_name>/<int:object_id>/', views.reject_product, name='reject_product'),
 
 ]
 

@@ -1,0 +1,84 @@
+{% load static %}
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Admin Dashboard - TakaHub</title>
+    <link rel="stylesheet" href="{% static 'css/buyer_profile.css' %}">
+    <style>
+        .pending-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .pending-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .pending-item:last-child {
+            border-bottom: none;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .approve-btn, .reject-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .approve-btn { background-color: #28a745; color: white; }
+        .reject-btn { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+<section class="product-banner">
+    <h2>Admin Dashboard - Pending Approvals</h2>
+    <p><a href="/">Home</a> > Admin Dashboard</p>
+</section>
+
+<div style="max-width: 1200px; margin: auto; padding: 20px;">
+
+    <div class="pending-section">
+        <h3>Pending Upcycled Products</h3>
+        {% for product in pending_upcycled %}
+            <div class="pending-item">
+                <div class="item-details">
+                    <strong>{{ product.product_name }}</strong> by {{ product.artisan.name|default:product.artisan.username }} - KSh {{ product.price }}
+                </div>
+                <div class="actions">
+                    <form method="post" action="{% url 'approve_product' 'upcycledproduct' product.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="approve-btn">Approve</button>
+                    </form>
+                    <form method="post" action="{% url 'reject_product' 'upcycledproduct' product.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="reject-btn">Reject</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p>No pending upcycled products.</p>
+        {% endfor %}
+    </div>
+
+    <div class="pending-section">
+        <h3>Waste Items</h3>
+        <p>All waste items are automatically approved and publicly visible.</p>
+    </div>
+
+</div>
+
+</body>
+</html>
+{% include "footer.html" %}

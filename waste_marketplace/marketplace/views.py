@@ -55,8 +55,8 @@ def logout_view(request):
     return redirect('home')  # Redirect to home page after logout
 
 def home(request):
-    featured_products = UpcycledProduct.objects.order_by('-id')[:4]
-    featured_trash_items = TrashItem.objects.order_by('-id')[:4]  # or any filter you like
+    featured_products = UpcycledProduct.objects.filter(approval_status=True).order_by('-id')[:4]
+    featured_trash_items = TrashItem.objects.filter(approval_status=True).order_by('-id')[:4]  # or any filter you like
 
     context = {
         'featured_products': featured_products,
@@ -208,7 +208,7 @@ def product_listing(request):
             product.artisan        = request.user
             product.approval_status = False
             product.save()
-            messages.success(request, "Product listed successfully!")
+            messages.success(request, "Product listed successfully! Pending admin approval.")
             return redirect('listed_products')
     else:
         form = UpcycledProductForm()
@@ -257,12 +257,12 @@ def buyer_profile(request):
 
 
 def upcycled_product_details(request, slug):
-    product = get_object_or_404(UpcycledProduct, slug=slug)
+    product = get_object_or_404(UpcycledProduct, slug=slug, approval_status=True)
     return render(request, 'upcycled_product_details.html', {'product': product})
 
 
 def upcycled_products(request):
-    products = UpcycledProduct.objects.all().order_by('-id')
+    products = UpcycledProduct.objects.filter(approval_status=True).order_by('-id')
     paginator = Paginator(products, 12)  # 12 products per page
 
     page_number = request.GET.get('page')
@@ -363,7 +363,7 @@ def remove_from_cart(request, item_id):
 
 
 def trash_item_list(request):
-    items = TrashItem.objects.filter(product_status="active")  # Add filters as needed
+    items = TrashItem.objects.filter(product_status="active", approval_status=True)  # Add filters as needed
     paginator = Paginator(items, 12)  # Or however many per page
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -371,7 +371,7 @@ def trash_item_list(request):
 
 
 def trash_item_details(request, slug):
-    product = get_object_or_404(TrashItem, slug=slug)
+    product = get_object_or_404(TrashItem, slug=slug, approval_status=True)
     return render(request, 'trash_item_details.html', {'product': product})
 
 
@@ -672,10 +672,10 @@ def order_details(request, order_id):
         for item in ordered_items:
             ct = ContentType.objects.get_for_model(item.item)
             if not Review.objects.filter(
-                   reviewer=request.user,
-                   content_type=ct,
-                   object_id=item.item.id
-               ).exists():
+                    reviewer=request.user,
+                    content_type=ct,
+                    object_id=item.item.id
+                ).exists():
                 pending_review = True
                 break
         # if all products already reviewed, check driver
@@ -694,6 +694,55 @@ def order_details(request, order_id):
         'ordered_items': ordered_items,
         'pending_review': pending_review,
     })
+
+
+@login_required
+def admin_dashboard(request):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    pending_upcycled = UpcycledProduct.objects.filter(approval_status=False)
+    # Waste items are auto-approved, so no pending waste
+
+    context = {
+        'pending_upcycled': pending_upcycled,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+
+@login_required
+def approve_product(request, model_name, object_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    ct = get_object_or_404(ContentType, model=model_name)
+    product = get_object_or_404(ct.model_class(), pk=object_id)
+
+    if hasattr(product, 'approval_status'):
+        product.approval_status = True
+        product.save()
+        messages.success(request, f"{model_name.title()} approved successfully.")
+    else:
+        messages.error(request, "Invalid product type.")
+
+    return redirect('admin_dashboard')
+
+
+@login_required
+def reject_product(request, model_name, object_id):
+    if request.user.role != 'admin':
+        return HttpResponseForbidden("Access denied.")
+
+    ct = get_object_or_404(ContentType, model=model_name)
+    product = get_object_or_404(ct.model_class(), pk=object_id)
+
+    if hasattr(product, 'approval_status'):
+        product.delete()  # Or set to rejected status if you want to keep records
+        messages.success(request, f"{model_name.title()} rejected and removed.")
+    else:
+        messages.error(request, "Invalid product type.")
+
+    return redirect('admin_dashboard')
 
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -858,6 +907,7 @@ def add_waste_listing(request):
             waste_item = form.save(commit=False)
             waste_item.seller = request.user
             waste_item.product_status = 'active'
+            waste_item.approval_status = True  # Auto-approved for waste items
             waste_item.save()
             messages.success(request, "Waste item listed successfully!")
             return redirect('waste_seller_listed_waste')
@@ -903,7 +953,8 @@ def search_page(request):
                 Q(material_name__icontains=q) |
                 Q(category__icontains=q) |
                 Q(tags__icontains=q),
-                product_status='active'
+                product_status='active',
+                approval_status=True
             )
             for obj in trash_qs:
                 setattr(obj, 'stype', 'trash')

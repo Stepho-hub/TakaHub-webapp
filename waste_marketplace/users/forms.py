@@ -13,13 +13,14 @@ class CustomUserSignupForm(UserCreationForm):
         ('waste_seller', 'Waste Seller'),
     ]
 
+    name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
     phone = forms.CharField(max_length=15)
     role = forms.ChoiceField(choices=ROLE_CHOICES)
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'phone', 'role', 'password1', 'password2']
+        fields = ['username', 'name', 'email', 'phone', 'role', 'password1', 'password2']
 
 
 class CustomUserForm(forms.ModelForm):

@@ -180,6 +180,11 @@
             <img src="{{ product.product_images.url }}" alt="{{ product.product_name }}">
             <h3>{{ product.product_name }}</h3>
             <p><strong>KSh {{ product.price }}</strong></p>
+            {% if not product.approval_status %}
+                <p style="color: orange;"><strong>Pending Admin Approval</strong></p>
+            {% else %}
+                <p style="color: green;"><strong>Approved</strong></p>
+            {% endif %}
             <a href="{% url 'upcycled_product_details' product.slug %}" class="view-button">View Details</a>
             <div class="button-pair">
                 <a href="{% url 'edit_product'   product.pk %}" class="edit-btn">Edit</a>

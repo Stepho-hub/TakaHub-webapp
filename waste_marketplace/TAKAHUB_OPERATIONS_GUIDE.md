@@ -19,6 +19,7 @@
 **TakaHub** is Kenya's premier digital waste management and upcycling marketplace platform that connects waste generators with artisans, buyers, and recyclers to transform waste into economic value. Our mission is to create a sustainable circular economy that reduces landfill waste, creates jobs, and generates income from what was previously considered trash.
 
 ### Core Objectives:
+
 - **Reduce Waste**: Divert waste from landfills through proper collection and recycling
 - **Create Jobs**: Empower artisans and waste collectors with economic opportunities
 - **Promote Upcycling**: Transform waste materials into valuable products
@@ -31,26 +32,31 @@
 TakaHub operates a **closed-loop waste management system** with four main participant types:
 
 ### 1. **Waste Sellers/Generators** 🏭
+
 - **Who**: Factories, households, businesses, institutions
 - **What**: Generate various types of recyclable waste
 - **Role**: List waste materials for sale on the platform
 
 ### 2. **Artisans/Upcyclers** 🎨
+
 - **Who**: Skilled craftspeople, recyclers, upcycling businesses
 - **What**: Purchase waste materials and transform them into new products
 - **Role**: Buy waste, create upcycled products, sell on marketplace
 
 ### 3. **Buyers/Consumers** 🛒
+
 - **Who**: Eco-conscious consumers, businesses, retailers
 - **What**: Purchase upcycled products and recycled materials
 - **Role**: Support circular economy by buying sustainable products
 
 ### 4. **Delivery Drivers** 🚚
+
 - **Who**: Logistics partners, waste collection specialists
 - **What**: Transport waste and products between parties
 - **Role**: Facilitate safe, efficient waste collection and product delivery
 
 ### 5. **Administrators** 👨‍💼
+
 - **Who**: Platform managers, moderators
 - **What**: Oversee platform operations and user management
 - **Role**: Ensure smooth operations, resolve disputes, maintain quality standards
@@ -62,35 +68,43 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 ### 1. **Administrator** 🛡️
 
 **Responsibilities:**
+
 - Platform oversight and management
 - User verification and approval
+- Product approval for upcycled items (waste items are auto-approved)
 - Dispute resolution
 - Quality control and standards enforcement
 - System monitoring and reporting
 - Policy implementation
 
 **Access:**
+
 - Full platform access
 - User management dashboard
+- Admin approval dashboard for upcycled products
 - Reporting and analytics
 - Content moderation tools
 
 ### 2. **Artisan** 🎨
 
 **Responsibilities:**
-- **Waste Purchasing**: Buy recyclable materials from sellers
+
+- **Waste Purchasing**: Buy recyclable materials from sellers (waste is auto-approved)
 - **Product Creation**: Transform waste into upcycled products
-- **Product Listing**: Upload finished products to marketplace
+- **Product Listing**: Upload finished products to marketplace (requires admin approval)
+- **Approval Monitoring**: Track approval status of listed products
 - **Quality Assurance**: Ensure products meet platform standards
 - **Order Fulfillment**: Process and ship customer orders
 
 **Access:**
-- Waste materials marketplace
-- Product listing interface
+
+- Waste materials marketplace (all approved waste visible)
+- Product listing interface with approval status tracking
 - Order management system
 - Sales analytics dashboard
 
 **Economic Role:**
+
 - **Waste Buyer**: Purchases raw materials (bottles, metals, plastics, etc.)
 - **Product Seller**: Sells finished upcycled goods
 - **Job Creator**: Employs workers in upcycling process
@@ -98,6 +112,7 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 ### 3. **Driver/Delivery Guy** 🚚
 
 **Responsibilities:**
+
 - **Waste Collection**: Pick up waste from sellers
 - **Product Delivery**: Deliver upcycled products to buyers
 - **Route Optimization**: Plan efficient collection routes
@@ -105,12 +120,14 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 - **Vehicle Maintenance**: Ensure proper transport conditions
 
 **Access:**
+
 - Delivery management system
 - Route planning tools
 - Collection schedule
 - Delivery tracking
 
 **Economic Role:**
+
 - **Logistics Provider**: Facilitates waste movement
 - **Service Provider**: Earns from delivery fees
 - **Efficiency Expert**: Optimizes waste collection routes
@@ -118,6 +135,7 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 ### 4. **Buyer** 🛍️
 
 **Responsibilities:**
+
 - **Product Discovery**: Browse upcycled marketplace
 - **Sustainable Purchasing**: Buy eco-friendly products
 - **Waste Selling**: Optionally list recyclable waste
@@ -125,12 +143,14 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 - **Community Building**: Promote sustainable consumption
 
 **Access:**
+
 - Product marketplace
 - Waste listing interface (optional)
 - Order history
 - Review system
 
 **Economic Role:**
+
 - **Product Consumer**: Purchases upcycled goods
 - **Waste Supplier**: Optionally sells recyclable materials
 - **Market Driver**: Creates demand for sustainable products
@@ -140,15 +160,18 @@ TakaHub operates a **closed-loop waste management system** with four main partic
 ## 🗑️ Waste Flow Process
 
 ### **1. Waste Generation and Listing**
+
 ```mermaid
 graph TD
     A[Factory/Household generates waste] --> B[Waste sorted and prepared]
     B --> C[Waste listed on TakaHub platform]
     C --> D[Waste categorized by type/material]
     D --> E[Price set based on market rates]
+    E --> F[Waste automatically approved and visible]
 ```
 
 ### **2. Waste Purchase and Collection**
+
 ```mermaid
 graph TD
     E[Waste listed on platform] --> F[Artisan discovers and purchases]
@@ -158,6 +181,7 @@ graph TD
 ```
 
 ### **3. Upcycling and Product Creation**
+
 ```mermaid
 graph TD
     I[Waste received by artisan] --> J[Materials cleaned/sorted]
@@ -168,6 +192,7 @@ graph TD
 ```
 
 ### **4. Product Sale and Delivery**
+
 ```mermaid
 graph TD
     N[Upcycled product listed] --> O[Buyer discovers and purchases]
@@ -183,23 +208,25 @@ graph TD
 
 ### **Waste Materials → Valuable Products**
 
-| **Waste Type** | **Upcycled Products** | **Environmental Benefit** |
-|---------------|-----------------------|---------------------------|
-| Plastic bottles | Bags, jewelry, furniture | Reduces plastic pollution |
-| Metal scraps | Decorative items, tools | Conserves metal resources |
-| Glass bottles | Vases, lighting, art | Reduces landfill waste |
-| Paper/cardboard | Packaging, stationery | Saves trees |
-| Electronic waste | Art, components | Prevents toxic leakage |
+| **Waste Type**   | **Upcycled Products**    | **Environmental Benefit** |
+| ---------------- | ------------------------ | ------------------------- |
+| Plastic bottles  | Bags, jewelry, furniture | Reduces plastic pollution |
+| Metal scraps     | Decorative items, tools  | Conserves metal resources |
+| Glass bottles    | Vases, lighting, art     | Reduces landfill waste    |
+| Paper/cardboard  | Packaging, stationery    | Saves trees               |
+| Electronic waste | Art, components          | Prevents toxic leakage    |
 
 ### **Upcycling Process Examples:**
 
 1. **Plastic Bottle Transformation**:
+
    - Input: 20 plastic bottles
    - Process: Cleaning, cutting, weaving
    - Output: Eco-friendly handbag
    - Value Added: 500-1500 KSh
 
 2. **Metal Scrap Upcycling**:
+
    - Input: Car parts, aluminum cans
    - Process: Melting, molding, polishing
    - Output: Decorative wall art
@@ -218,11 +245,13 @@ graph TD
 ### **Economic Benefits for Kenya:**
 
 1. **Job Creation**:
+
    - 5-10 direct jobs per artisan workshop
    - 200+ waste collectors employed nationwide
    - 50+ delivery drivers in logistics network
 
 2. **Income Generation**:
+
    - Artisans earn 20,000-100,000 KSh/month
    - Waste sellers earn 5,000-30,000 KSh/month
    - Platform generates 1M+ KSh monthly transactions
@@ -235,11 +264,13 @@ graph TD
 ### **Environmental Benefits:**
 
 1. **Waste Reduction**:
+
    - 50+ tons/month diverted from landfills
    - 300+ tons/year recycled/repurposed
    - 60% reduction in target waste streams
 
 2. **Carbon Footprint Reduction**:
+
    - 200+ tons CO2 saved annually
    - 15,000+ trees saved per year
    - 50% reduction in plastic pollution
@@ -256,16 +287,19 @@ graph TD
 ### **Addressing Kenyan Waste Challenges:**
 
 1. **Plastic Pollution Crisis**:
+
    - Kenya generates 24M tons plastic waste annually
    - TakaHub targets 5% reduction in first year
    - Focus on Nairobi, Mombasa, Kisumu hotspots
 
 2. **Informal Sector Integration**:
+
    - Formalizes 1000+ informal waste pickers
    - Provides training and safety equipment
    - Offers microfinance for upcycling tools
 
 3. **Urban Waste Management**:
+
    - Partners with 15+ county governments
    - Reduces 30% of illegal dumping
    - Creates 50+ community collection points
@@ -277,27 +311,47 @@ graph TD
 
 ---
 
+## 👤 User Identification and Experience
+
+### **Account Display Features**
+- **User Identification**: Account button shows "Name (Role)" format (e.g., "Dan (Artisan)")
+- **Role-Based Navigation**: Different menu options based on user type
+- **Approval Status Tracking**: Artisans can see approval status of their products
+- **Public Access**: All approved items visible to logged-in and unlogged users
+
+### **Approval System**
+- **Waste Items**: Automatically approved upon listing for immediate marketplace visibility
+- **Upcycled Products**: Require admin approval before appearing in marketplace
+- **Admin Dashboard**: Centralized approval interface for upcycled products
+- **Status Communication**: Clear messaging about approval status to users
+
 ## 🎯 Platform Features and Workflow
 
 ### **For Waste Sellers:**
-1. **Easy Listing**: Upload waste photos, set quantities
+
+1. **Easy Listing**: Upload waste photos, set quantities (auto-approved)
 2. **Market Pricing**: Get fair market rates
 3. **Scheduled Collection**: Arrange convenient pickup
 4. **Secure Payment**: Receive funds after collection
+5. **Instant Visibility**: Waste items appear immediately in marketplace
 
 ### **For Artisans:**
-1. **Material Discovery**: Browse available waste types
+
+1. **Material Discovery**: Browse all auto-approved waste types
 2. **Bulk Purchasing**: Buy materials in quantity
-3. **Product Showcase**: List finished upcycled goods
-4. **Sales Analytics**: Track performance and earnings
+3. **Product Showcase**: List finished upcycled goods (requires admin approval)
+4. **Approval Tracking**: Monitor product approval status
+5. **Sales Analytics**: Track performance and earnings
 
 ### **For Buyers:**
+
 1. **Eco-Shopping**: Discover sustainable products
 2. **Transparent Pricing**: See upcycling stories
 3. **Secure Checkout**: Multiple payment options
 4. **Impact Tracking**: See environmental savings
 
 ### **For Drivers:**
+
 1. **Route Optimization**: Efficient collection paths
 2. **Safety Training**: Proper waste handling
 3. **Earnings Tracking**: Delivery-based income
@@ -308,6 +362,7 @@ graph TD
 ## 🌟 Success Stories and Case Studies
 
 ### **Case Study 1: Plastic to Fashion**
+
 - **Artisan**: Mama Waste Crafts, Nairobi
 - **Materials**: 500kg plastic bottles/month
 - **Products**: Handbags, wallets, jewelry
@@ -315,6 +370,7 @@ graph TD
 - **Impact**: 2000+ bottles diverted from Dandora
 
 ### **Case Study 2: Metal Art Revolution**
+
 - **Artisan**: ScrapArt Studios, Mombasa
 - **Materials**: Car parts, aluminum cans
 - **Products**: Wall art, sculptures
@@ -322,6 +378,7 @@ graph TD
 - **Impact**: 1500kg metal waste upcycled
 
 ### **Case Study 3: Community Transformation**
+
 - **Location**: Kibera, Nairobi
 - **Participants**: 50 waste pickers
 - **Results**: 80% income increase
@@ -334,17 +391,20 @@ graph TD
 TakaHub represents a **paradigm shift** in Kenya's waste management approach:
 
 ### **From Linear to Circular Economy:**
+
 ```
 Linear: Resources → Products → Waste → Landfill
 Circular: Resources → Products → Waste → New Products → Repeat
 ```
 
 ### **Triple Bottom Line Impact:**
+
 - **Economic**: Job creation and income generation
 - **Environmental**: Waste reduction and resource conservation
 - **Social**: Community empowerment and skills development
 
 ### **Call to Action:**
+
 - **Waste Generators**: List your recyclables
 - **Artisans**: Join the upcycling revolution
 - **Buyers**: Support sustainable products
@@ -355,6 +415,7 @@ Circular: Resources → Products → Waste → New Products → Repeat
 ---
 
 **📞 Contact TakaHub:**
+
 - Website: https://takahub.com
 - Email: info@takahub.com
 - Phone: +254 700 123456

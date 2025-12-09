@@ -84,6 +84,7 @@ class TrashItem(models.Model):
     tags = models.CharField(max_length=255, blank=True, null=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
     reviews = GenericRelation(Review)
+    approval_status = models.BooleanField(default=False)
     
     def update_average_rating(self):
         avg_rating = self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0.0
