@@ -177,7 +177,11 @@
 <div class="products-grid">
     {% for waste_item in page_obj %}
         <div class="product-card">
-            <img src="{{ waste_item.images.url }}" alt="{{ waste_item.material_name }}">
+            {% if waste_item.images %}
+                <img src="{{ waste_item.images.url }}" alt="{{ waste_item.material_name }}">
+            {% else %}
+                <img src="{% static 'images/mixed_scrap.png' %}" alt="{{ waste_item.material_name }}">
+            {% endif %}
             <h3>{{ waste_item.material_name }}</h3>
             <p><strong>KSh {{ waste_item.price }}</strong></p>
             <p>Quantity: {{ waste_item.quantity }} KGS</p>

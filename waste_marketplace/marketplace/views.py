@@ -267,7 +267,11 @@ def buyer_profile(request):
 
 
 def upcycled_product_details(request, slug):
-    product = get_object_or_404(UpcycledProduct, slug=slug, approval_status=True)
+    # Allow admins to view pending products, regular users can only see approved ones
+    if request.user.is_authenticated and request.user.role == 'admin':
+        product = get_object_or_404(UpcycledProduct, slug=slug)
+    else:
+        product = get_object_or_404(UpcycledProduct, slug=slug, approval_status=True)
     return render(request, 'upcycled_product_details.html', {'product': product})
 
 
@@ -449,74 +453,111 @@ def initiate_payment(request):
     post_data = request.POST
     user = request.user
 
+    print(f"Initiating payment for user: {user.username}")
+
     # 1) Gather cart
     cart_items = CartItem.objects.filter(buyer=user)
     if not cart_items.exists():
+        print("❌ Cart is empty")
         return redirect_with_message("Your cart is empty.")
 
     subtotal = sum(item.subtotal() for item in cart_items)
+    print(f"Cart subtotal: {subtotal}")
 
     # 2) Pre-create Order (Pending)
-    order = Order.objects.create(
-        buyer=user,
-        first_name=post_data.get("first_name"),
-        last_name=post_data.get("last_name"),
-        company=post_data.get("company"),
-        country=post_data.get("country"),
-        street_address=post_data.get("street_address"),
-        city=post_data.get("city"),
-        state=post_data.get("state"),
-        zip_code=post_data.get("zip"),
-        phone=post_data.get("phone"),
-        email=post_data.get("email"),
-        payment_method='mpesa',
-        total_amount=Decimal(subtotal),
-        payment_status='pending',
-        delivery_status='ready',
-        checkout_request_id='',  # Will update after STK Push
-    )
+    try:
+        order = Order.objects.create(
+            buyer=user,
+            first_name=post_data.get("first_name"),
+            last_name=post_data.get("last_name"),
+            company=post_data.get("company"),
+            country=post_data.get("country"),
+            street_address=post_data.get("street_address"),
+            city=post_data.get("city"),
+            state=post_data.get("state"),
+            zip_code=post_data.get("zip"),
+            phone=post_data.get("phone"),
+            email=post_data.get("email"),
+            payment_method='mpesa',
+            total_amount=Decimal(subtotal),
+            payment_status='pending',
+            delivery_status='ready',
+            checkout_request_id='',  # Will update after STK Push
+        )
+        print(f"✅ Created order {order.id}")
+    except Exception as e:
+        print(f"❌ Failed to create order: {e}")
+        return redirect_with_message("Failed to create order.")
 
     # 3) Create its OrderItems
-    for item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            content_type=item.content_type,
-            object_id=item.object_id,
-            quantity=item.quantity,
-            price=item.item.price
-        )
+    try:
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                content_type=item.content_type,
+                object_id=item.object_id,
+                quantity=item.quantity,
+                price=item.item.price
+            )
+        print(f"✅ Created {cart_items.count()} order items")
+    except Exception as e:
+        print(f"❌ Failed to create order items: {e}")
+        order.delete()  # Clean up
+        return redirect_with_message("Failed to process cart items.")
 
     # 4) Save pending order ID in session
     request.session['pending_order_id'] = order.id
 
-    # 5) Initiate MPESA STK Push
-    phone_number = post_data.get("phone")  # Assuming phone is in format 254XXXXXXXXX
-    if not phone_number.startswith('254'):
-        phone_number = '254' + phone_number[1:] if phone_number.startswith('0') else phone_number
+    # 5) Initiate STK Push for MPESA payment
+    phone_number = post_data.get("phone")
+    if not phone_number:
+        print("❌ Phone number required for MPESA payment")
+        order.delete()
+        return redirect_with_message("Phone number is required for MPESA payment.")
 
-    amount = int(subtotal)  # MPESA expects integer
+    # Ensure phone number starts with 254
+    if phone_number.startswith('0'):
+        phone_number = '254' + phone_number[1:]
+    elif not phone_number.startswith('254'):
+        phone_number = '254' + phone_number
 
-    # MPESA credentials (placeholders - replace with actual)
-    consumer_key = getattr(settings, 'MPESA_CONSUMER_KEY', 'your_consumer_key')
-    consumer_secret = getattr(settings, 'MPESA_CONSUMER_SECRET', 'your_consumer_secret')
-    shortcode = getattr(settings, 'MPESA_SHORTCODE', '174379')
-    passkey = getattr(settings, 'MPESA_PASSKEY', 'your_passkey')
+    # Get MPESA credentials from settings
+    consumer_key = getattr(settings, 'MPESA_CONSUMER_KEY', '')
+    consumer_secret = getattr(settings, 'MPESA_CONSUMER_SECRET', '')
+    shortcode = getattr(settings, 'MPESA_SHORTCODE', '')
+    passkey = getattr(settings, 'MPESA_PASSKEY', '')
+
+    if not all([consumer_key, consumer_secret, shortcode, passkey]):
+        print("❌ MPESA credentials not configured")
+        order.delete()
+        return redirect_with_message("Payment system not configured.")
 
     # Get access token
     access_token = get_mpesa_access_token(consumer_key, consumer_secret)
     if not access_token:
-        return redirect_with_message("Payment initialization failed.")
+        print("❌ Failed to get MPESA access token")
+        order.delete()
+        return redirect_with_message("Failed to connect to payment system.")
 
     # Initiate STK Push
-    stk_push_response = initiate_stk_push(access_token, shortcode, passkey, phone_number, amount, f"TTS_{order.id}")
-    if stk_push_response and stk_push_response.get('ResponseCode') == '0':
-        # STK Push initiated successfully
-        order.checkout_request_id = stk_push_response['CheckoutRequestID']
+    account_reference = f"TTS_{order.id}"
+    stk_response = initiate_stk_push(access_token, shortcode, passkey, phone_number, str(int(subtotal)), account_reference)
+
+    if stk_response and 'CheckoutRequestID' in stk_response:
+        order.checkout_request_id = stk_response['CheckoutRequestID']
         order.save()
-        request.session['checkout_request_id'] = stk_push_response['CheckoutRequestID']
-        return redirect('payment_waiting')  # Redirect to a waiting page
+        print(f"✅ STK Push initiated - CheckoutRequestID: {order.checkout_request_id}")
     else:
+        print(f"❌ STK Push failed: {stk_response}")
+        order.delete()
         return redirect_with_message("Failed to initiate payment. Please try again.")
+
+    request.session['checkout_request_id'] = order.checkout_request_id
+    request.session['total_amount'] = str(subtotal)  # Store amount for template
+
+    print(f"✅ Payment initiated - Order: {order.id}, Amount: {subtotal}, CheckoutRequestID: {order.checkout_request_id}")
+
+    return redirect('payment_waiting')  # Redirect to a waiting page with STK Push instructions
 
 
 def get_mpesa_access_token(consumer_key, consumer_secret):
@@ -557,40 +598,92 @@ def initiate_stk_push(access_token, shortcode, passkey, phone_number, amount, ac
 
 @login_required
 def payment_waiting(request):
-    return render(request, 'payment_waiting.html')
+    # Get the checkout request ID and amount from session
+    checkout_request_id = request.session.get('checkout_request_id')
+    total_amount = request.session.get('total_amount')
+
+    if not checkout_request_id:
+        messages.error(request, "No active payment session found.")
+        return redirect('cart')
+
+    context = {
+        'checkout_request_id': checkout_request_id,
+        'total_amount': total_amount,
+        'debug': settings.DEBUG  # Only show debug info in development
+    }
+
+    return render(request, 'payment_waiting.html', context)
 
 
 @csrf_exempt
 def mpesa_callback(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        # Process the callback data
-        stk_callback = data.get('Body', {}).get('stkCallback', {})
-        checkout_request_id = stk_callback.get('CheckoutRequestID')
-        result_code = stk_callback.get('ResultCode')
+        try:
+            data = json.loads(request.body)
+            print(f"MPESA Callback received: {json.dumps(data, indent=2)}")
 
-        if result_code == 0:
-            # Payment successful
-            callback_metadata = stk_callback.get('CallbackMetadata', {}).get('Item', [])
-            transaction_id = None
-            for item in callback_metadata:
-                if item['Name'] == 'MpesaReceiptNumber':
-                    transaction_id = item['Value']
-                    break
+            # Process C2B callback data (different from STK Push)
+            transaction_type = data.get('TransactionType')
+            trans_id = data.get('TransID')
+            trans_time = data.get('TransTime')
+            trans_amount = data.get('TransAmount')
+            business_short_code = data.get('BusinessShortCode')
+            bill_ref_number = data.get('BillRefNumber')  # This should match our TTS_{order.id}
+            invoice_number = data.get('InvoiceNumber')
+            org_account_balance = data.get('OrgAccountBalance')
+            third_party_trans_id = data.get('ThirdPartyTransID')
+            msisdn = data.get('MSISDN')
+            first_name = data.get('FirstName')
+            middle_name = data.get('MiddleName')
+            last_name = data.get('LastName')
 
-            # Find the order by checkout_request_id
-            try:
-                order = Order.objects.get(checkout_request_id=checkout_request_id)
-                order.payment_status = 'paid'
-                order.save()
-                # Clear cart for the buyer
-                CartItem.objects.filter(buyer=order.buyer).delete()
-            except Order.DoesNotExist:
-                pass  # Handle error
+            print(f"Processing payment - BillRef: {bill_ref_number}, Amount: {trans_amount}")
 
-        return HttpResponse('Callback received')
+            # Extract order ID from BillRefNumber (format: TTS_{order_id})
+            if bill_ref_number and bill_ref_number.startswith('TTS_'):
+                order_id = bill_ref_number.replace('TTS_', '')
+                print(f"Extracted order ID: {order_id}")
+
+                try:
+                    order = Order.objects.get(id=order_id)
+                    print(f"Found order {order_id}, expected amount: {order.total_amount}")
+
+                    # Verify amount matches (allow small floating point differences)
+                    expected_amount = float(order.total_amount)
+                    received_amount = float(trans_amount)
+
+                    if abs(expected_amount - received_amount) < 0.01:  # Allow 1 cent difference
+                        order.payment_status = 'paid'
+                        order.save()
+                        # Clear cart for the buyer
+                        CartItem.objects.filter(buyer=order.buyer).delete()
+                        print(f"✅ Payment confirmed for order {order_id}, amount: {trans_amount}")
+                        return HttpResponse('Payment processed successfully')
+                    else:
+                        print(f"❌ Amount mismatch for order {order_id}: expected {expected_amount}, got {received_amount}")
+                        return HttpResponse('Amount mismatch')
+
+                except Order.DoesNotExist:
+                    print(f"❌ Order not found: {order_id}")
+                    return HttpResponse('Order not found')
+                except Exception as e:
+                    print(f"❌ Error processing payment: {e}")
+                    return HttpResponse('Processing error')
+            else:
+                print(f"❌ Invalid BillRefNumber format: {bill_ref_number}")
+                return HttpResponse('Invalid reference')
+
+        except json.JSONDecodeError as e:
+            print(f"❌ Invalid JSON in callback: {e}")
+            return HttpResponse('Invalid JSON')
+        except Exception as e:
+            print(f"❌ Unexpected error in callback: {e}")
+            return HttpResponse('Unexpected error')
+
+    return HttpResponse('Callback received')
 
 def redirect_with_message(message):
+    print(f"Redirecting with message: {message}")
     return HttpResponse(f"""
         <html>
             <head>
@@ -617,11 +710,12 @@ def redirect_with_message(message):
                         box-shadow: 0 0 10px rgba(0,0,0,0.1);
                         font-size: 18px;
                         color: #333;
+                        text-align: center;
                     }}
                 </style>
             </head>
             <body>
-                <div class="message">{message} Redirecting to homepage...</div>
+                <div class="message">{message}<br><small>Redirecting to homepage...</small></div>
             </body>
         </html>
     """)
@@ -629,25 +723,46 @@ def redirect_with_message(message):
 @csrf_exempt
 def payment_success(request):
     tran_id = request.POST.get('tran_id') or request.GET.get('tran_id')
-    if not tran_id or not tran_id.startswith("TTS_"):
-        return redirect_with_message("❌ Invalid transaction ID.")
-    
-    order_id = tran_id.replace("TTS_", "")
-    order = get_object_or_404(Order, id=order_id)
+    print(f"Payment success called with tran_id: {tran_id}")
 
-    # Same steps as before
-    order.payment_status = 'paid'
-    order.save()
-    CartItem.objects.filter(buyer=order.buyer).delete()
-    
-    return redirect_with_message("✅ Payment successful and order placed!")
+    if not tran_id or not tran_id.startswith("TTS_"):
+        print("❌ Invalid transaction ID format")
+        return redirect_with_message("❌ Invalid transaction ID.")
+
+    order_id = tran_id.replace("TTS_", "")
+    print(f"Processing payment success for order: {order_id}")
+
+    try:
+        order = Order.objects.get(id=order_id)
+        print(f"Found order {order_id}, current status: {order.payment_status}")
+
+        if order.payment_status == 'paid':
+            print("⚠️ Order already marked as paid")
+            return redirect_with_message("✅ Order already confirmed!")
+
+        # Mark as paid and clear cart
+        order.payment_status = 'paid'
+        order.save()
+        CartItem.objects.filter(buyer=order.buyer).delete()
+
+        print(f"✅ Payment successful for order {order_id}")
+        return redirect_with_message("✅ Payment successful and order placed!")
+
+    except Order.DoesNotExist:
+        print(f"❌ Order {order_id} not found")
+        return redirect_with_message("❌ Order not found.")
+    except Exception as e:
+        print(f"❌ Error processing payment success: {e}")
+        return redirect_with_message("❌ Payment processing failed.")
 
 @csrf_exempt
 def payment_fail(request):
+    print("Payment failed callback received")
     return redirect_with_message("❌ Payment failed.")
 
 @csrf_exempt
 def payment_cancel(request):
+    print("Payment cancelled callback received")
     return redirect_with_message("⚠️ Payment canceled.")
 
 @csrf_exempt

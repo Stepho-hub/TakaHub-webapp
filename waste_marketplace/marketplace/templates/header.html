@@ -118,8 +118,14 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        .account-dropdown.active .account-btn {
+            background: #E9FFF0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
         .account-btn i {
             font-size: 14px;
+            flex-shrink: 0;
         }
 
         .dropdown-content {
@@ -128,22 +134,30 @@
             right: 0;
             top: 100%;
             background: #fff;
-            min-width: 200px;
-            border-radius: 10px;
+            min-width: 240px;
+            border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             z-index: 1000;
             margin-top: 8px;
             overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.1);
         }
 
         .dropdown-content a {
             display: block;
-            padding: 12px 20px;
+            padding: 14px 20px;
             color: #333;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             border-bottom: 1px solid #f0f0f0;
-            font-weight: normal;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #E9FFF0;
+            color: #1A7836;
+            padding-left: 25px;
         }
 
         .dropdown-content a:last-child {
@@ -153,6 +167,7 @@
         .dropdown-content a:hover {
             background-color: #E9FFF0;
             color: #1A7836;
+            padding-left: 25px;
         }
 
         .logout-link {
@@ -165,7 +180,15 @@
             color: #D84315 !important;
         }
 
+        .account-dropdown.active .dropdown-content {
+            display: block;
+        }
+
         .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .account-dropdown.active .dropdown-content {
             display: block;
         }
 
@@ -275,33 +298,34 @@
         </ul>
 
         <div class="account-dropdown">
-            <button class="account-btn">
+            <button class="account-btn" onclick="toggleDropdown()">
                 <i class="fas fa-user"></i>
                 {% if user.is_authenticated %}
-                    {{ user.name|default:user.get_full_name|default:user.username }} ({{ user.get_role_display }})
+                    <span class="user-info">{{ user.name|default:user.get_full_name|default:user.username }}</span>
+                    <span class="user-role">({{ user.get_role_display }})</span>
                 {% else %}
                     Login
                 {% endif %}
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
             </button>
-            <div class="dropdown-content">
+            <div class="dropdown-content" id="accountDropdown">
                 {% if user.is_authenticated %}
                     {% if user.role == 'buyer' %}
-                        <a href="{% url 'my_orders' %}">My Orders</a>
-                        <a href="/cart/">My Cart</a>
-                        <a href="{% url 'buyer_profile' %}">My Profile</a>
+                        <a href="{% url 'my_orders' %}">📦 My Orders</a>
+                        <a href="/cart/">🛒 My Cart</a>
+                        <a href="{% url 'buyer_profile' %}">👤 My Profile</a>
                     {% elif user.role == 'artisan' %}
-                        <a href="{% url 'listed_products' %}">My Upcycled Products</a>
-                        <a href="{% url 'product_listing' %}">Add New Product</a>
-                        <a href="{% url 'artisan_profile' %}">My Profile</a>
+                        <a href="{% url 'listed_products' %}">🎨 My Upcycled Products</a>
+                        <a href="{% url 'product_listing' %}">➕ Add New Product</a>
+                        <a href="{% url 'artisan_profile' %}">👤 My Profile</a>
                     {% elif user.role == 'waste_seller' %}
-                        <a href="{% url 'add_waste_listing' %}">Add Waste Listing</a>
-                        <a href="{% url 'waste_seller_listed_waste' %}">My Waste Listings</a>
-                        <a href="{% url 'waste_seller_profile' %}">My Profile</a>
+                        <a href="{% url 'add_waste_listing' %}">➕ Add Waste Listing</a>
+                        <a href="{% url 'waste_seller_listed_waste' %}">📋 My Waste Listings</a>
+                        <a href="{% url 'waste_seller_profile' %}">👤 My Profile</a>
                     {% elif user.role == 'driver' %}
-                        <a href="{% url 'driver_dashboard' %}">My Deliveries</a>
-                        <a href="{% url 'delivery_history' %}">Delivery Schedule</a>
-                        <a href="{% url 'driver_profile' %}">My Profile</a>
+                        <a href="{% url 'driver_dashboard' %}">🚚 My Deliveries</a>
+                        <a href="{% url 'delivery_history' %}">📅 Delivery Schedule</a>
+                        <a href="{% url 'driver_profile' %}">👤 My Profile</a>
                     {% elif user.role == 'admin' %}
                         <a href="{% url 'admin_dashboard' %}">📊 Admin Dashboard</a>
                         <a href="{% url 'admin_user_management' %}">👥 User Management</a>
@@ -309,10 +333,10 @@
                         <a href="{% url 'admin_content_moderation' %}">🎨 Content Moderation</a>
                         <a href="/admin/" style="border-top: 1px solid #eee; margin-top: 8px; padding-top: 12px;">🔧 Django Admin</a>
                     {% endif %}
-                    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+                    <a href="{% url 'logout' %}" class="logout-link">🚪 Logout</a>
                 {% else %}
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'signup' %}">Sign Up</a>
+                    <a href="{% url 'login' %}">🔐 Login</a>
+                    <a href="{% url 'signup' %}">📝 Sign Up</a>
                 {% endif %}
             </div>
         </div>
@@ -488,6 +512,20 @@
         const widget = document.getElementById('communicationWidget');
         widget.classList.toggle('active');
     }
+
+    function toggleDropdown() {
+        const dropdown = document.querySelector('.account-dropdown');
+        dropdown.classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.account-dropdown');
+        const accountBtn = document.querySelector('.account-btn');
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
 
     // Close widget when clicking outside
     document.addEventListener('click', function(event) {

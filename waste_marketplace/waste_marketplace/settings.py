@@ -156,5 +156,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MPESA Settings
 MPESA_CONSUMER_KEY = 'your_mpesa_consumer_key'
 MPESA_CONSUMER_SECRET = 'your_mpesa_consumer_secret'
-MPESA_SHORTCODE = '174379'  # Test shortcode
+MPESA_SHORTCODE = '174379'  # Test shortcode (for C2B registration)
+MPESA_TILL_NUMBER = '7486326'  # Your till number for receiving payments
 MPESA_PASSKEY = 'your_mpesa_passkey'
